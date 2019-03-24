@@ -48,4 +48,8 @@ public class Timer {
         return T4;
     }
 
+    public Timestamp getCurTime() {
+        return new java.sql.Timestamp(System.currentTimeMillis());
+    }
+
 }

@@ -17,7 +17,7 @@ public class ClientService {
     private BufferedReader inreader;
     private PrintWriter outwriter;
 
-    ClientService() {
+    public ClientService() {
         Settings setting = new Settings();
         String remoteHost = setting.getRemoteHost();
         int remotePort = setting.getRemotePort();
@@ -61,5 +61,13 @@ public class ClientService {
             e.printStackTrace();
         }
         return data;
+    }
+
+    public void closeCon() {
+        try {
+            socket.close();  //close the socket
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -22,6 +22,7 @@ public class ContinuePage extends AppCompatActivity {
     private Button button;
     private int time;
     private final String TAG = "ContinuePage";
+    private int ifCancel = 0; //Indicate whether the background task is canceled
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +34,7 @@ public class ContinuePage extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(ContinuePage.this, SecondTrialView.class);
-                startActivity(intent);
+                continueBtn();
             }
         });
 
@@ -46,10 +46,17 @@ public class ContinuePage extends AppCompatActivity {
      */
     private void initView() {
         Settings settings = new Settings();
+        this.ifCancel = 0;
         text = (TextView) findViewById(R.id.textView);
         button = (Button) findViewById(R.id.button);
         time = settings.getTimeBetween2Trials();
         text.setText(R.string.continue_text);
+    }
+
+    private void continueBtn() {
+        this.ifCancel = 1;
+        Intent intent=new Intent(ContinuePage.this, SecondTrialView.class);
+        startActivity(intent);
     }
 
     /**
@@ -64,9 +71,14 @@ public class ContinuePage extends AppCompatActivity {
                 e.printStackTrace();
             }
             time--;
-            if (time == 60) {
-                oneMinWarning();
+            if ((time == 60)&&(ifCancel == 0)) {
+                WarningTone();
             }
+        }
+        if (ifCancel == 0) {
+            //When it comes to the expected time, go to the next page immediately
+            WarningTone();
+            continueBtn();
         }
     }
 
@@ -74,7 +86,7 @@ public class ContinuePage extends AppCompatActivity {
      * One minute before the set time, warn the user.
      * Using both a ring tone and a vibrator
      */
-    private void oneMinWarning() {
+    private void WarningTone() {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
         r.play();  //play the ring tone

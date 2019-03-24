@@ -24,7 +24,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
-            android:text="Finish" />
+            android:text="Finish"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/correct"
@@ -60,7 +61,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:scaleType="fitXY" />
+                android:scaleType="fitXY"
+                android:visibility="invisible" />
 
         </LinearLayout>
 

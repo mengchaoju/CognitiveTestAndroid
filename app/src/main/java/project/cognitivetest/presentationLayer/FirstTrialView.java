@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,7 +20,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
 import project.cognitivetest.R;
+import serviceLayer.ClientService;
 import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
@@ -30,16 +36,21 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private Bitmap copyBitmap;
     private Paint paint;
     private Canvas canvas;
+    private PorterDuffXfermode porterDuffXfermode;
     private float startX;
     private float startY;
-    private int seq = 1;
+    private int seq = 1;  //Sequence number of the current line
+    private int ifMark = 0;  //0 means draw, 1 means correct(mark).
+    //Indicating whether drawing activity is running or not, 1 = running.
+    private int runningFlag = 0;
     private Timer timer;
     private DataCache dataCache;
+    private Settings settings;
 
     // The available colours
-    private int startColour = 0xff0000;
-    private int endColour = 0xff9900;
-    private int[] colourRange = {0xff0000, 0xff9900, 0xffff00, 0x66ff00, 0x0000ff, 0x00ffff, 0x660066};
+    private int startColour;
+    private int endColour;
+    private int[] colourRange;
     private int colourFlag = 0;
     private int colourFlag2 = 0;
 
@@ -51,7 +62,6 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_trial_view);
 
-        Settings settings = new Settings();
         initView();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.white_background);
@@ -59,8 +69,9 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         // Create a pen instance
         paint = new Paint();
 
-        //The width of drawing
-        paint.setStrokeWidth(settings.getStrokeWidth());
+        paint.setXfermode(null);
+        paint.setStrokeWidth(settings.getStrokeWidth());  //The width of drawing pen
+        paint.setStrokeCap(Paint.Cap.ROUND);  //Set the cap to round
         canvas = new Canvas(copyBitmap);
         canvas.drawBitmap(bitmap, new Matrix(), paint);
         sketchpad.setImageBitmap(copyBitmap);
@@ -81,6 +92,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
                         Log.d(TAG, "drawing!");
                         startX = event.getX();
                         startY = event.getY();
+                        changeColor(v);
                         canvas.drawPoint(startX, startY, paint);
                         sketchpad.setImageBitmap(copyBitmap);
 //                        showToast("drawing on: ("+Float.toString(startX)+", "+
@@ -91,10 +103,8 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
                         //The coordinate of drawing
                         float x = event.getX();
                         float y = event.getY();
-                        if (colourFlag%1 == 0) {
-                            Log.d(TAG, "Colour flag"+Integer.toString(colourFlag));
-                            changeColor(v);
-                        }
+//                        Log.d(TAG, "Colour flag"+Integer.toString(colourFlag));
+                        changeColor(v);
                         canvas.drawLine(startX, startY, x, y, paint);
                         sketchpad.setImageBitmap(copyBitmap);
                         startX = x;
@@ -138,35 +148,70 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
 
     /**
      *  When clicking on finish button, should go to the next page and stop the timer
+     *  Also, data will be automatically sent to the server.
      */
-
     private void finishDraw() {
         timer.setTime(3);
+        this.runningFlag = 0;  //Mark that this activity is no longer running
         showToast("Updating... please wait!");
         new LongOperation().execute("");
     }
 
+    /**
+     * When clicking on the correct/draw button, the text will change,
+     * the pen will change to mark pen,
+     * and the flag indicating draw/correct will also change
+     */
     private void correct() {
-
+        if (ifMark == 0) {
+            Log.d(TAG, "start correcting!");
+            this.ifMark = 1;
+            correctBtn.setText("draw");
+            porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN);
+            paint.setXfermode(porterDuffXfermode);
+            paint.setStrokeWidth(settings.getMarkPenWidth());
+            paint.setColor(0xff9900);
+        } else {
+            Log.d(TAG, "finish correcting!");
+            this.ifMark = 0;
+            correctBtn.setText("correct");
+            paint.setXfermode(null);
+            paint.setStrokeWidth(settings.getStrokeWidth());
+            paint.setColor(startColour);
+        }
     }
 
+    /**
+     * When clicking on the start button, the finish button will appear,
+     * the start button will hide, a timestamp is record,
+     * and the sketchpad will be enabled.
+     */
     private void startDraw() {
-        //record the start time
-        timer.setTime(1);
+        timer.setTime(1);  //record the start time
+        startBtn.setVisibility(View.INVISIBLE);  //Hide the start button
+        finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
+        sketchpad.setVisibility(View.VISIBLE);  //Enable the sketchpad
+        new SaveData().execute("");
+        this.runningFlag = 1;
     }
 
     //Initialise all the views
     private void initView() {
-        //Initialise the timer
-        timer = new Timer();
-        //Initialise the data cache
-        dataCache = new DataCache();
+        timer = new Timer();  //Initialise the timer
+        dataCache = new DataCache();  //Initialise the data cache
+        settings = new Settings();  //Initialise the settings
+        //Get the available pen colours
+        startColour = settings.getStartColour();
+        endColour = settings.getEndColour();
+        colourRange = settings.getColourRange();
 
+        //Initialise the view
         sketchpad = (ImageView) findViewById(R.id.sketchpad);
         startBtn = (Button) findViewById(R.id.start);
         finishBtn = (Button) findViewById(R.id.finish);
         correctBtn = (Button) findViewById(R.id.correct);
 
+        //Set the button listener
         startBtn.setOnClickListener(this);
         finishBtn.setOnClickListener(this);
         correctBtn.setOnClickListener(this);
@@ -175,8 +220,8 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     //Change the colour of painting
     public void changeColor(View view) {
         if (colourFlag2%50 == 0 && colourFlag2!=0) {
-            startColour = colourRange[colourFlag2/50%7];
-            startColour = colourRange[(colourFlag2/50+1)%7];
+            startColour = colourRange[colourFlag2/50%colourRange.length];
+            endColour = colourRange[(colourFlag2/50+1)%colourRange.length];
         }
         paint.setColor(getNextColor(startColour, endColour, colourFlag%50));
     }
@@ -192,10 +237,63 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         return Color.rgb((int)r1,(int)g1,(int)b1);
     }
 
+    //Saving the data of pixels information to cache
+    private void dataSaver() {
+        float x = 0f, y = 0f;
+        while (runningFlag == 1) {
+            if ((startX != x)||(startY != y)) {
+                String tempData = strConstructor();
+                x = startX;
+                y = startY;
+                dataCache.save(tempData);
+            }
+        }
+    }
+
+    //Construct the data to save to format of x, y, time, sequence number, draw/correct flag
+    private String strConstructor() {
+        return Float.toString(startX)+","+Float.toString(startY)+","+timer.getCurTime().toString()
+                +","+Integer.toString(seq)+","+Integer.toString(ifMark);
+    }
+
+    //Construct the pixel data to be sent to the server to String
+    private String dataConstructor() {
+        String tempStr = "";
+        ArrayList<String> tempArr;
+        tempArr = dataCache.getArr();
+        for (int i=0; i<tempArr.size(); i++) {
+            tempStr = tempStr + tempArr.get(i)+";";
+        }
+//        System.out.println("tempStr:"+tempStr);
+        return "{\"command\":\"firstTrialData\",\"message\":\""+tempStr+"\"}";
+    }
+
+    //Construct the timer data to be sent to the server to String
+    private String dataConstructor2() {
+        String tempStr = "";
+        Timestamp[] tm;
+        tm = timer.getTime();
+        for (int i=0; i<tm.length; i++) {
+            tempStr = tempStr + tm[i].toString()+";";
+        }
+        return "{\"command\":\"firstTrialTimer\",\"message\":\""+tempStr+"\"}";
+    }
+
+    /**
+     * Do in background, dealing with getting data from and data transmission
+     */
     private class LongOperation extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
+            Log.d(TAG,"saving data");
+            //Send the data then close the socket
+            ClientService client = new ClientService();
+            client.sendData(dataConstructor());
+            client.closeCon();
+            ClientService client2 = new ClientService();
+            client2.sendData(dataConstructor2());
+            client2.closeCon();
             return "Executed";
         }
 
@@ -203,6 +301,33 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         protected void onPostExecute(String result) {
             Intent intent=new Intent(FirstTrialView.this, ContinuePage.class);
             startActivity(intent);
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+    }
+
+    /**
+     * Do in background, dealing with data saving to cache
+     */
+    private class SaveData extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            dataSaver();
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
         }
 
         @Override
