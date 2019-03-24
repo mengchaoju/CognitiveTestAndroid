@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CognitiveTest</string>
+    <string name="continue_text">Now please hand the tablet to the clinician.</string>
+    <string name="introduction_text">This is an introduction.</string>
 </resources>
