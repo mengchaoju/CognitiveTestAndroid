@@ -3,7 +3,7 @@ package serviceLayer;
 public class Settings {
 
     //Host name and port number of the remote server
-    private String remoteHost = "10.12.13.214";
+    private String remoteHost = "10.12.11.234";
     private int remotePort = 5000;
     private int strokeWidth = 12;
     private int markPenWidth = 42;
@@ -12,6 +12,11 @@ public class Settings {
     private int startColour = 0xff0000;
     private int endColour = 0xff9900;
     private int[] colourRange = {0xff0000, 0xff9900, 0xffff00, 0x66ff00, 0x0000ff, 0x00ffff, 0x660066};
+    /**
+     * The following variables are used only for testing
+     */
+    private final String sampleJsonCommand = "{\"command\":\"test\",\"message\":\"it's a test message!\"}";
+    private final String samplePixelData = "";
 
     public String getRemoteHost() {
         return this.remoteHost;
@@ -36,6 +41,7 @@ public class Settings {
     public int getMarkPenWidth() {
         return this.markPenWidth;
     }
+
     public int getTimeBetween2Trials() {
         return this.timeBetween2Trials;
     }
@@ -52,4 +58,10 @@ public class Settings {
         return this.colourRange;
     }
 
+    /**
+     * The following functions are used only for testing
+     */
+    public String getSamplePixelData() {
+        return this.samplePixelData;
+    }
 }

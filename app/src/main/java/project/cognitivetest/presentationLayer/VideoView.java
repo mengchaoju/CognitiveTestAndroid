@@ -15,9 +15,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
 import project.cognitivetest.R;
 import serviceLayer.ClientService;
 import serviceLayer.Settings;
+import serviceLayer.VideoService;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
@@ -30,11 +34,14 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private Paint paint;
     private Canvas canvas;
     private Settings settings;
+    private VideoService videoService;
     private float startX;
     private float startY;
-    private int seq = 1;
+    private int seq = 0;  //The sequence number of line currently drawn
     private String participantID = "abc";
     private int isPause = 0;  //Indicate whether the video is paused
+    private ArrayList<Long> timeLine;
+    private int totalPoints;
     private final String TAG = "VideoView";
 
     @Override
@@ -50,6 +57,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         pause = (Button) findViewById(R.id.pause_button);
         video = (ImageView) findViewById(R.id.video_imageView);
         infoText = (TextView) findViewById(R.id.video_information);
+        timeLine = new ArrayList<>();
         settings = new Settings();
 
         play.setEnabled(false);
@@ -99,6 +107,22 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    private void playVideo() {
+        if (videoService.getSeq()!=seq) {
+            seq = videoService.getSeq();
+            startX =videoService.getNextX();
+            startY = videoService.getNextY();
+            canvas.drawPoint(startX, startY, paint);
+            videoService.increaseSeq();
+        } else {
+            float curX = videoService.getNextX();
+            float curY = videoService.getNextY();
+            canvas.drawLine(startX, startY, curX, curY, paint);
+            videoService.increaseSeq();
+        }
+
+    }
+
     private void getDataFromServer() {
         client = new ClientService();
         client.sendData("{\"command\":\"getVideo\",\"message\":\""+participantID+"\"}");
@@ -116,7 +140,11 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
         @Override
         protected String doInBackground(String... params) {
-            getDataFromServer();
+//            getDataFromServer();
+            String str = settings.getSamplePixelData();  //For testing
+            videoService = new VideoService(str);
+            totalPoints = videoService.getTotalPoints();
+            timeLine = videoService.getTimeline();
             return "Executed";
         }
 
@@ -138,6 +166,42 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
         }
     }
+
+    /**
+     * Do in background, dealing with getting data from server
+     */
+    private class VideoHandler extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            for (int i = 0; i < totalPoints; i++) {
+                try {
+                    Thread.sleep(timeLine.get(i));
+                    playVideo();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    Log.d(TAG, "thread ended unexpected!");
+                }
+
+            }
+            return "Executed";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+    }
+
 
     // To show information on screen
     private void showToast(final String text) {
