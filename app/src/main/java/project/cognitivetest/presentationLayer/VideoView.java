@@ -94,6 +94,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         canvas.drawBitmap(bitmap, new Matrix(), paint);
         video.setImageBitmap(copyBitmap);
         Log.d(TAG, "Video player initialised!");
+        new VideoHandler().execute("");
     }
 
     private void pauseBtn() {
@@ -113,14 +114,17 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             startX =videoService.getNextX();
             startY = videoService.getNextY();
             canvas.drawPoint(startX, startY, paint);
+            video.setImageBitmap(copyBitmap);
             videoService.increaseSeq();
         } else {
             float curX = videoService.getNextX();
             float curY = videoService.getNextY();
             canvas.drawLine(startX, startY, curX, curY, paint);
+            startX = curX;
+            startY = curY;
+            video.setImageBitmap(copyBitmap);
             videoService.increaseSeq();
         }
-
     }
 
     private void getDataFromServer() {
@@ -173,10 +177,13 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private class VideoHandler extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
+            Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
             for (int i = 0; i < totalPoints; i++) {
                 try {
+                    Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
                     Thread.sleep(timeLine.get(i));
                     playVideo();
+                    Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Log.d(TAG, "thread ended unexpected!");

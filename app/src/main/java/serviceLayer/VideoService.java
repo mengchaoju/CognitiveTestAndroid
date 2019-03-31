@@ -27,7 +27,7 @@ public class VideoService {
     public VideoService(String str) {
         try {
             String[] tempStr = str.split(";");
-            totalPoints = tempStr.length/5;
+            totalPoints = tempStr.length;
             initData(tempStr);
         } catch (NullPointerException e) {
             Log.d(TAG, "Error in initializing data!");
@@ -50,30 +50,34 @@ public class VideoService {
         Timestamp lastTimeStamp = null;
         Timestamp thisTimeStamp;
         int len = strList.length;
+        Log.d(TAG, "Total points cached:"+Integer.toString(len));
         for (int i = 0; i < len; i++) {
-            switch (i % 5) {
-                case (0):
-                    Xcoordinate.add(Float.parseFloat(strList[i]));
-                    break;
-                case (1):
-                    Ycoordinate.add(Float.parseFloat(strList[i]));
-                    break;
-                case (2):
-                    if (i!=2) {
-                        thisTimeStamp = Timestamp.valueOf(strList[i]);
-                        timeDiff = thisTimeStamp.getTime() - lastTimeStamp.getTime();
-                        lastTimeStamp = thisTimeStamp;
-                    } else {
-                        lastTimeStamp = Timestamp.valueOf(strList[i]);
-                    }
-                    timeline.add(timeDiff);
-                    break;
-                case (3):
-                    seqList.add(Integer.parseInt(strList[i]));
-                    break;
-                case (4):
-                    flags.add(Integer.parseInt(strList[i]));
-                    break;
+            String[] strList2 = strList[i].split(",");
+            for (int j = 0; j < 5; j++) {
+                switch (j) {
+                    case (0):
+                        Xcoordinate.add(Float.parseFloat(strList2[j]));
+                        break;
+                    case (1):
+                        Ycoordinate.add(Float.parseFloat(strList2[j]));
+                        break;
+                    case (2):
+                        if (i!=0) {
+                            thisTimeStamp = Timestamp.valueOf(strList2[j]);
+                            timeDiff = thisTimeStamp.getTime() - lastTimeStamp.getTime();
+                            lastTimeStamp = thisTimeStamp;
+                        } else {
+                            lastTimeStamp = Timestamp.valueOf(strList2[j]);
+                        }
+                        timeline.add(timeDiff);
+                        break;
+                    case (3):
+                        seqList.add(Integer.parseInt(strList2[j]));
+                        break;
+                    case (4):
+                        flags.add(Integer.parseInt(strList2[j]));
+                        break;
+                }
             }
         }
         Log.d(TAG, "Initialise data complete!");
