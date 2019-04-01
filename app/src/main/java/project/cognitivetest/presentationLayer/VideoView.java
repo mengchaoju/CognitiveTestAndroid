@@ -14,10 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
-
 import project.cognitivetest.R;
 import serviceLayer.ClientService;
 import serviceLayer.Settings;
@@ -178,24 +175,29 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         @Override
         protected String doInBackground(String... params) {
             Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
-            for (int i = 0; i < totalPoints; i++) {
-                try {
-                    Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
-                    Thread.sleep(timeLine.get(i));
-                    playVideo();
-                    Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Log.d(TAG, "thread ended unexpected!");
+            int i =0;  //The counter
+            while (true) {
+                if (i == totalPoints) {
+                    break;
+                } else if (isPause!=1) {
+                    try {
+                        Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
+                        Thread.sleep(timeLine.get(i));
+                        playVideo();
+                        Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
+                        i++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "thread ended unexpected!");
+                    }
                 }
-
             }
             return "Executed";
         }
 
         @Override
         protected void onPostExecute(String result) {
-
+            Log.d(TAG,"Finish playing video");
         }
 
         @Override
