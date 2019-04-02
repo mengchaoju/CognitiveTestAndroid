@@ -16,7 +16,7 @@ import org.json.JSONTokener;
 import android.content.Context;
 import android.util.Log;
 
-import project.cognitivetest.modules.User;
+import project.cognitivetest.modules.Security;
 
 
 /**
@@ -27,14 +27,14 @@ public class LocalUserList {
     private static final String TAG = "localUserList";
 
 //    save the user info list
-public static void saveUserList(Context context, ArrayList<User> users)
+public static void saveUserList(Context context, ArrayList<Security> users)
         throws Exception {
     /* saving */
     Log.i(TAG, "Saving data");
     Writer writer = null;
     OutputStream out = null;
     JSONArray array = new JSONArray();
-    for (User user : users) {
+    for (Security user : users) {
         array.put(user.toJson());
     }
     try {
@@ -50,10 +50,10 @@ public static void saveUserList(Context context, ArrayList<User> users)
 }
 
     /* get the user list */
-    public static ArrayList<User> getUserList(Context context) {
+    public static ArrayList<Security> getUserList(Context context) {
         /* load list */
         FileInputStream in = null;
-        ArrayList<User> users = new ArrayList<User>();
+        ArrayList<Security> users = new ArrayList<Security>();
         try {
 
             in = context.openFileInput(FILENAME);
@@ -69,7 +69,7 @@ public static void saveUserList(Context context, ArrayList<User> users)
             jsonArray = (JSONArray) new JSONTokener(jsonString.toString())
                     .nextValue(); // convert the String to JSONArray object
             for (int i = 0; i < jsonArray.length(); i++) {
-                User user = new User(jsonArray.getJSONObject(i));
+                Security user = new Security(jsonArray.getJSONObject(i));
                 users.add(user);
             }
 

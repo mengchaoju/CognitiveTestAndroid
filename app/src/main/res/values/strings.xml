@@ -26,4 +26,6 @@
     <string name="hint_login_switchon">Don\'t save password</string>
     <string name="hint_login_swithcoff">Save password</string>
     <string name="hint_login_loading">Logging in</string>
+    <string name="hint_login_pwdEditField">Password</string>
+    <string name="hint_login_usernameEditField">Username</string>
 </resources>

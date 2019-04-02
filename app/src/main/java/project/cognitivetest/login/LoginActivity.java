@@ -34,6 +34,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import project.cognitivetest.R;
+import project.cognitivetest.modules.Security;
 import project.cognitivetest.modules.User;
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener,
@@ -51,7 +52,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     private ImageView mLoginMoreUserView; // pull down the popup button
     private String mIdString;
     private String mPwdString;
-    private ArrayList<User> mUsers; // user list
+    private ArrayList<Security> mUser; // user list
     private ListView mUserIdListView; // the ListView object displayed in the drop-down pop-up window
     private LoginAapter mAdapter; //ListView listener
     private PopupWindow mPop; // the pulled down pop-up window
@@ -68,13 +69,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         mLoginLinearLayout.startAnimation(mTranslate);//Y axis horizontal movement
 
         /* get saved user password*/
-        mUsers = LocalUserList.getUserList(LoginActivity.this);
+        mUser = LocalUserList.getUserList(LoginActivity.this);
 
         /* displays the first user in the list in the edit box */
-        if (mUsers.size() > 0) {
+        if (mUser.size() > 0) {
             //            put the first user into edittext field
-            mIdEditText.setText(mUsers.get(0).getUsername());
-            mPwdEditText.setText(mUsers.get(0).getPassword());
+            mIdEditText.setText(mUser.get(0).getUsername());
+            mPwdEditText.setText(mUser.get(0).getPassword());
         }
 
         LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(
@@ -82,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         mUserIdListView = (ListView) parent.findViewById(android.R.id.list);
         parent.removeView(mUserIdListView); // must disengage from the parent-child relationship, or you will report an error
         mUserIdListView.setOnItemClickListener(this); // set the click event
-        LoginAapter mAdapter = new LoginAapter(mUsers);
+        LoginAapter mAdapter = new LoginAapter(mUser);
         mUserIdListView.setAdapter(mAdapter);
     }
 
@@ -180,15 +181,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                                 boolean mIsSave = true;
                                 if(isChecked){
                                     Log.i(TAG, "Save user list");
-                                    for (User user : mUsers) { // Determines whether the local document has this ID user
+                                    for (Security user : mUser) { // Determines whether the local document has this ID user
                                         if (user.getUsername().equals(mIdString)) {
                                             mIsSave = false;
                                             break;
                                         }
                                     }
                                     if (mIsSave) { // put the current user in to userlist
-                                        User user = new User(mIdString, null,null,null,mPwdString);
-                                        mUsers.add(user);
+                                        Security user = new Security(mIdString, mPwdString);
+                                        mUser.add(user);
                                         //unfinished waiting for the verify process
                                     }
                                 }else{
@@ -210,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                 if (mPop == null) {
                     initPop();
                 }
-                if (!mPop.isShowing() && mUsers.size() > 0) {
+                if (!mPop.isShowing() && mUser.size() > 0) {
                     Log.i(TAG, "the dropdown icon will change to pull up icon");
                     mMoreUsers.setImageResource(R.drawable.login_more_down); // change icon
                     mPop.showAsDropDown(mUserIdLinearLayout, 2, 1); // show pop box
@@ -223,8 +224,8 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        mIdEditText.setText(mUsers.get(i).getUsername());
-        mPwdEditText.setText(mUsers.get(i).getPassword());
+        mIdEditText.setText(mUser.get(i).getUsername());
+        mPwdEditText.setText(mUser.get(i).getPassword());
         mPop.dismiss();
     }
 
@@ -277,10 +278,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     }
 
     /*Adaptor of the Viewlist*/
-    class LoginAapter extends ArrayAdapter<User> {
+    class LoginAapter extends ArrayAdapter<Security> {
 
-        public LoginAapter(ArrayList<User> users) {
-            super(LoginActivity.this, 0, users);
+        public LoginAapter(ArrayList<Security> users) {
+            super(LoginActivity.this,0,users);
         }
 
         public View getView(final int position, View convertView,
@@ -308,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
                         mIdEditText.setText(mIdString);
                         mPwdEditText.setText(mPwdString);
                     }
-                    mUsers.remove(getItem(position));
+                    mUser.remove(getItem(position));
                     mAdapter.notifyDataSetChanged(); // renew ListView
                 }
             });
@@ -322,7 +323,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     public void onPause() {
         super.onPause();
         try {
-            LocalUserList.saveUserList(LoginActivity.this, mUsers);
+            LocalUserList.saveUserList(LoginActivity.this, mUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
