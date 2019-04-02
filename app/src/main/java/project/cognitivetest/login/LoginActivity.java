@@ -1,9 +1,10 @@
 package project.cognitivetest.login;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -28,16 +30,14 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import project.cognitivetest.R;
 import project.cognitivetest.modules.Security;
-import project.cognitivetest.modules.User;
 
-public class LoginActivity extends AppCompatActivity implements OnClickListener,
+public class LoginActivity extends Activity implements OnClickListener,
         OnItemClickListener, OnDismissListener {
 
     protected static final String TAG = "LoginActivity";
@@ -57,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
     private LoginAapter mAdapter; //ListView listener
     private PopupWindow mPop; // the pulled down pop-up window
     private CheckBox checkRemPWD; //check box for selecting whether to save the password
+    private TextView btnReg;
 
     private CheckBox isRemPWD =  (CheckBox) findViewById(R.id.login_remPWD);
 
@@ -78,6 +79,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
             mPwdEditText.setText(mUser.get(0).getPassword());
         }
 
+        btnReg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
         LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(
                 R.layout.userifo_listview, null);
         mUserIdListView = (ListView) parent.findViewById(android.R.id.list);
@@ -96,7 +105,10 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener,
         mLoginLinearLayout = (LinearLayout) findViewById(R.id.login_linearLayout);
         mUserIdLinearLayout = (LinearLayout) findViewById(R.id.userId_LinearLayout);
         mTranslate = AnimationUtils.loadAnimation(this, R.anim.my_translate); // initial the animation
+        btnReg = (TextView) findViewById(R.id.login_txtReg);
+        checkRemPWD = (CheckBox) findViewById(R.id.login_remPWD);
         initLoginingDlg();
+
     }
 
     public void initPop() {
