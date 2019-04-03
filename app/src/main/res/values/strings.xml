@@ -21,7 +21,7 @@
     </string>
     <string name="hint_login_btn">LOGIN</string>
     <string name="hint_login_reg">Register</string>
-    <string name="hint_login_remPWD">  Remeber Password</string>
+    <string name="hint_login_remPWD">  Remember Password</string>
     <string name="todo">TODO</string>
     <string name="hint_login_switchon">Don\'t save password</string>
     <string name="hint_login_swithcoff">Save password</string>

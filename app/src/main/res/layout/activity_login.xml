@@ -1,106 +1,112 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+    style="@style/layout_full"
     android:background="#e7e7e7"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+
+    >
 
     <ImageView
-        android:layout_width="132dp"
-        android:layout_height="132dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_gravity="center"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="100dp"
         android:src="@drawable/login_icon"
         android:contentDescription="TODO" />
 
 
     <LinearLayout
         android:id="@+id/login_linearLayout"
-        android:layout_width="match_parent"
+        style="@style/layout_full"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/login_input"
-        android:orientation="vertical" >
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="100dp"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/userId_LinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal" >
+            android:background="@drawable/login_input"
+            android:orientation="vertical">
 
-            <!-- android:ems="10" means EditText only can show 10 chars，the else not shown -->
-            <!-- android:singleLine="true" means when it cannot show whole string, use "..." to show the rest -->
-            <EditText
-                android:id="@+id/login_edtId"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/userId_LinearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <!-- android:ems="10" means EditText only can show 10 chars，the else not shown -->
+                <!-- android:singleLine="true" means when it cannot show whole string, use "..." to show the rest -->
+                <EditText
+                    android:id="@+id/login_edtId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:ems="20"
+                    android:hint="@string/hint_login_usernameEditField"
+                    android:inputType=""
+                    android:paddingLeft="30dp"
+                    android:paddingTop="40dp"
+                    android:paddingRight="30dp"
+                    android:paddingBottom="0dp"
+                    android:singleLine="true"
+                    android:textColorHint="#999999"
+                    android:textSize="30dp">
+
+                    <requestFocus />
+                </EditText>
+
+                <ImageView
+                    android:id="@+id/login_more_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_marginRight="50dp"
+                    android:src="@drawable/login_more_up" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CACDD1" />
+
+            <EditText
+                android:id="@+id/login_edtPwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@null"
-                android:ems="20"
-                android:hint="@string/hint_login_usernameEditField"
-                android:paddingTop="30dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingBottom="0dp"
+                android:hint="@string/hint_login_pwdEditField"
+                android:inputType="textPassword"
+                android:paddingLeft="30dp"
+                android:paddingTop="10dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="10dp"
                 android:singleLine="true"
                 android:textColorHint="#999999"
-                android:textSize="18sp"
-                android:inputType="">
-
-                <requestFocus />
-            </EditText>
-
-            <ImageView
-                android:id="@+id/login_more_user"
-                android:layout_width="wrap_content"
-                android:layout_height="44dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/login_more_up" />
+                android:textSize="30dp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#CACDD1" />
-
-        <EditText
-            android:id="@+id/login_edtPwd"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="@null"
-            android:hint="@string/hint_login_pwdEditField"
-            android:inputType="textPassword"
-            android:paddingStart="15dp"
-            android:paddingRight="0dp"
-            android:singleLine="true"
-            android:textColorHint="#999999"
-            android:textSize="18sp" />
-    </LinearLayout>
 
         <Button
             android:id="@+id/login_btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="20dp"
+            android:layout_width="400dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
             android:background="@drawable/login_button_style"
             android:text="@string/hint_login_btn"
             android:textColor="#FFFFFF"
-            android:textSize="19sp" />
+            android:textSize="40dp" />
 
-</LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        style="@style/layout_full"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -108,21 +114,23 @@
             android:id="@+id/login_txtReg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="50sp"
-            android:layout_marginTop="30sp"
+            android:layout_marginHorizontal="150dp"
+            android:layout_marginTop="170dp"
             android:text="@string/hint_login_reg"
+            android:textAllCaps="true"
             android:textColor="#0079FF"
-            android:textSize="18sp" />
+            android:textSize="35sp"
+            android:textStyle="bold|italic" />
 
         <CheckBox
             android:id="@+id/login_remPWD"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="52sp"
-            android:layout_marginTop="20sp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="150dp"
             android:singleLine="false"
             android:text="@string/hint_login_remPWD"
-            android:textSize="18sp" />
+            android:textSize="30sp" />
 
     </LinearLayout>
 

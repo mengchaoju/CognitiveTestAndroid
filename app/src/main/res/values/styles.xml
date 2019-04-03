@@ -24,4 +24,26 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
+    <!-- Full screen stretch-->
+      <style name="layout_full">  
+        <item name="android:layout_width">fill_parent</item>  
+        <item name="android:layout_height">fill_parent</item>  
+      </style>
+       
+    <!-- Fixed size-->
+      <style name="layout_wrap">  
+        <item name="android:layout_width">wrap_content</item>  
+        <item name="android:layout_height">wrap_content</item>  
+      </style>
+     
+    <!-- Transverse distribution-->
+      <style name="layout_horizontal" parent="layout_full">  
+        <item name="android:layout_width">0px</item>  
+      </style>
+        
+    <!-- longitudinal distribution-->
+      <style name="layout_vertical" parent="layout_full">  
+        <item name="android:layout_height">0px</item>  
+      </style>
+
 </resources>
