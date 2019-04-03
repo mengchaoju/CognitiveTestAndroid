@@ -36,4 +36,20 @@
         android:textSize="30dp"
         android:text="textView" />
 
+    <Button
+        android:id="@+id/image_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/play_button"
+        android:layout_marginBottom="-54dp"
+        android:text="Show Image" />
+
+    <Button
+        android:id="@+id/finish_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Finish"
+        android:visibility="invisible" />
+
 </RelativeLayout>

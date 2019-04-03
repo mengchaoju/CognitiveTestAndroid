@@ -95,20 +95,28 @@ public class VideoService {
         return Ycoordinate.get(sequence);
     }
 
+    //Get the line sequence number
     public int getSeq() {
         return seqList.get(sequence);
     }
 
+    // Get the draw/correct flag
     public int getFlag() {
         return flags.get(sequence);
     }
 
+    // Increase the sequence number (counter) by one
     public void increaseSeq() {
         sequence++;
     }
 
     public int getTotalPoints() {
         return this.totalPoints;
+    }
+
+    //Reset the sequence number (counter) when finish playing the video
+    public void resetSequence() {
+        sequence = 0;
     }
 
 }

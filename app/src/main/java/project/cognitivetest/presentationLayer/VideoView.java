@@ -22,8 +22,7 @@ import serviceLayer.VideoService;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
-    private Button play;
-    private Button pause;
+    private Button play, pause, image, finish;
     private ImageView video;
     private TextView infoText;
     private ClientService client;
@@ -52,15 +51,20 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private void initView() {
         play = (Button) findViewById(R.id.play_button);
         pause = (Button) findViewById(R.id.pause_button);
+        image = (Button) findViewById(R.id.image_button);
+        finish = (Button) findViewById(R.id.finish_button);
         video = (ImageView) findViewById(R.id.video_imageView);
         infoText = (TextView) findViewById(R.id.video_information);
         timeLine = new ArrayList<>();
         settings = new Settings();
 
         play.setEnabled(false);
+        image.setEnabled(false);
         infoText.setText(R.string.video_info_getData);
         play.setOnClickListener(this);
         pause.setOnClickListener(this);
+        image.setOnClickListener(this);
+        finish.setOnClickListener(this);
 
         new FetchData().execute("");
     }
@@ -71,10 +75,17 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                 play.setVisibility(View.INVISIBLE);
                 video.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.VISIBLE);
+                image.setVisibility(View.INVISIBLE);
                 playBtn();
                 break;
             case(R.id.pause_button):
                 pauseBtn();
+                break;
+            case(R.id.image_button):
+                imageBtn();
+                break;
+            case(R.id.finish_button):
+                finishBtn();
                 break;
         }
     }
@@ -103,6 +114,28 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             isPause = 0;
             pause.setText("Pause");
         }
+    }
+
+    private void imageBtn() {
+        Log.d(TAG,"Click on showImage button");
+
+    }
+
+    /**
+     * When click on finish button, restart the view and clear the drawing bitmap
+     * And reset the counters
+     */
+    private void finishBtn() {
+        Log.d(TAG, "Click on finish button");
+        play.setVisibility(View.VISIBLE);
+        video.setVisibility(View.INVISIBLE);
+        pause.setVisibility(View.INVISIBLE);
+        image.setVisibility(View.VISIBLE);
+        finish.setVisibility(View.INVISIBLE);
+        seq = 0;  // Reset the counter.
+        videoService.resetSequence();
+        copyBitmap.recycle();
+        paint.reset();
     }
 
     private void playVideo() {
@@ -153,6 +186,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         protected void onPostExecute(String result) {
             //When finish fetching data, enable the play button, show information
             play.setEnabled(true);
+            image.setEnabled(true);
             infoText.setVisibility(View.INVISIBLE);
             showToast("Data fetching success!");
         }
@@ -191,13 +225,14 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                         Log.d(TAG, "thread ended unexpected!");
                     }
                 }
-            }
+            }  //When finish playing, show finish button on the screen.
             return "Executed";
         }
 
         @Override
         protected void onPostExecute(String result) {
             Log.d(TAG,"Finish playing video");
+            finish.setVisibility(View.VISIBLE);
         }
 
         @Override
