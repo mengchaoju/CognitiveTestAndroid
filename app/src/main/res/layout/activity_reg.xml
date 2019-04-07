@@ -55,6 +55,21 @@
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
 
+        <!-- Date of Birth Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:inputType="none">
+            <EditText android:id="@+id/input_DateofBirth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:hint="Date of Birth"
+                android:textSize="40dp"/>
+        </android.support.design.widget.TextInputLayout>
+
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

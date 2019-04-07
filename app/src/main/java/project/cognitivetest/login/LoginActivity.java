@@ -1,83 +1,60 @@
 package project.cognitivetest.login;
 
 import android.app.Activity;
-import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.util.Log;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.PopupWindow.OnDismissListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import project.cognitivetest.R;
-import project.cognitivetest.modules.Security;
+import project.cognitivetest.until.ServerIP;
 
-public class LoginActivity extends Activity implements OnClickListener,
-        OnItemClickListener, OnDismissListener {
+public class LoginActivity extends Activity implements OnClickListener{
 
     protected static final String TAG = "LoginActivity";
+    private LinearLayout mUserIdLinearLayout;
     private LinearLayout mLoginLinearLayout; // the container for the login content
-    private LinearLayout mUserIdLinearLayout; // the drop-down pop-up window will be displayed below the container
-    private Animation mTranslate; // displacement animation
-    private Dialog mLoginingDlg; // displays the Dialog being logged in
     private EditText mIdEditText; // login ID edit box
     private EditText mPwdEditText; // login password edit box
-    private ImageView mMoreUsers; // drop down icon
     private Button mLoginButton; // login button
     private ImageView mLoginMoreUserView; // pull down the popup button
-    private String mIdString;
-    private String mPwdString;
-    private ArrayList<Security> mUser; // user list
     private ListView mUserIdListView; // the ListView object displayed in the drop-down pop-up window
-    private LoginAapter mAdapter; //ListView listener
-    private PopupWindow mPop; // the pulled down pop-up window
     private CheckBox checkRemPWD; //check box for selecting whether to save the password
     private TextView btnReg;
-
-    private CheckBox isRemPWD =  (CheckBox) findViewById(R.id.login_remPWD);
+    private SharedPreferences sharedPreferences;
+    private String username;
+    private String mIdString;
+    private String mPwdString;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        initView();
-        setListener();
-        mLoginLinearLayout.startAnimation(mTranslate);//Y axis horizontal movement
+        mLoginButton = (Button) findViewById(R.id.login_btnLogin);
+        btnReg = (TextView) findViewById(R.id.login_txtReg);
+        mIdEditText=(EditText)findViewById(R.id.login_edtId);
+        mPwdEditText=(EditText)findViewById(R.id.login_edtPwd);
 
-        /* get saved user password*/
-        mUser = LocalUserList.getUserList(LoginActivity.this);
-
-        /* displays the first user in the list in the edit box */
-        if (mUser.size() > 0) {
-            //            put the first user into edittext field
-            mIdEditText.setText(mUser.get(0).getUsername());
-            mPwdEditText.setText(mUser.get(0).getPassword());
-        }
+        mLoginButton.setOnClickListener(this);
 
         btnReg.setOnClickListener(new OnClickListener() {
             @Override
@@ -87,257 +64,133 @@ public class LoginActivity extends Activity implements OnClickListener,
             }
         });
 
-        LinearLayout parent = (LinearLayout) getLayoutInflater().inflate(
-                R.layout.userifo_listview, null);
-        mUserIdListView = (ListView) parent.findViewById(android.R.id.list);
-        parent.removeView(mUserIdListView); // must disengage from the parent-child relationship, or you will report an error
-        mUserIdListView.setOnItemClickListener(this); // set the click event
-        LoginAapter mAdapter = new LoginAapter(mUser);
-        mUserIdListView.setAdapter(mAdapter);
     }
-
-    private void initView() {
-        mIdEditText = (EditText) findViewById(R.id.login_edtId);
-        mPwdEditText = (EditText) findViewById(R.id.login_edtPwd);
-        mMoreUsers = (ImageView) findViewById(R.id.login_more_user);
-        mLoginButton = (Button) findViewById(R.id.login_btnLogin);
-        mLoginMoreUserView = (ImageView) findViewById(R.id.login_more_user);
-        mLoginLinearLayout = (LinearLayout) findViewById(R.id.login_linearLayout);
-        mUserIdLinearLayout = (LinearLayout) findViewById(R.id.userId_LinearLayout);
-        mTranslate = AnimationUtils.loadAnimation(this, R.anim.my_translate); // initial the animation
-        btnReg = (TextView) findViewById(R.id.login_txtReg);
-        checkRemPWD = (CheckBox) findViewById(R.id.login_remPWD);
-        initLoginingDlg();
-
-    }
-
-    public void initPop() {
-        int width = mUserIdLinearLayout.getWidth() - 4;
-        int height = LayoutParams.WRAP_CONTENT;
-        mPop = new PopupWindow(mUserIdListView, width, height, true);
-        mPop.setOnDismissListener(this);// Set the listener when the pop-up window disappears
-
-        // Click the other area of the popup window to make the window disappear
-        mPop.setBackgroundDrawable(new ColorDrawable(0xffffffff));
-    }
-
-    /* initial the login Dialog */
-    private void initLoginingDlg() {
-
-        mLoginingDlg = new Dialog(this, R.style.logining_dlg);
-        mLoginingDlg.setContentView(R.layout.logining_dlg);
-
-        Window window = mLoginingDlg.getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        // acquire the parameters about current window to set the parameters of the mLoginingDlg
-
-        // acquire the height and width of the screen
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int cxScreen = dm.widthPixels;
-        int cyScreen = dm.heightPixels;
-
-        int height = (int) getResources().getDimension(
-                R.dimen.loginingdlg_lr_margin);// height 42dp
-        int lrMargin = (int) getResources().getDimension(
-                R.dimen.loginingdlg_lr_margin); // margin to double sides 10dp
-        int topMargin = (int) getResources().getDimension(
-                R.dimen.loginingdlg_top_margin); // top margin 20dp
-
-        params.y = (-(cyScreen - height) / 2) + topMargin; // -199
-        /* put the window in the center of the screen, so x,y will show the The offset from this control to the center of the screen*/
-
-        params.width = cxScreen;
-        params.height = height;
-        // width,height means actual size of mLoginingDlg
-
-        mLoginingDlg.setCanceledOnTouchOutside(true); // Click any external Dialog area to close Dialog
-    }
-
-    /* show the logging dialog box */
-    private void showLoginingDlg() {
-        if (mLoginingDlg != null)
-            mLoginingDlg.show();
-    }
-
-    /* close the logging dialog box */
-    private void closeLoginingDlg() {
-        if (mLoginingDlg != null && mLoginingDlg.isShowing())
-            mLoginingDlg.dismiss();
-    }
-
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.login_btnLogin:
-                // start login
+    public void onClick(View view){
+        String userName = mIdEditText.getText().toString();
+        username = userName;
+        String passWord = mPwdEditText.getText().toString();
 
-                showLoginingDlg(); //show "log in" dialog box, as the activity is not connected with the server, the actual result cannot be shown now
-                Log.i(TAG, mIdString + "  " + mPwdString);
-                if (mIdString == null || mIdString.equals("")) { // when the username filed is empty, it will show "Please enter username"
-                    Toast.makeText(LoginActivity.this, "Please enter username", Toast.LENGTH_SHORT)
-                            .show();
-                } else if (mPwdString == null || mPwdString.equals("")) {// when the pwd filed is empty, it will show "Please enter password"
-
-                    Toast.makeText(LoginActivity.this, "Please enter password", Toast.LENGTH_SHORT)
-                            .show();
-                } else {//when the username and pwd are both not null
-
-                    try {
-
-                        checkRemPWD.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                            @Override
-                            public void onCheckedChanged(CompoundButton compoundButton,
-                                                         boolean isChecked) {
-                                boolean mIsSave = true;
-                                if(isChecked){
-                                    Log.i(TAG, "Save user list");
-                                    for (Security user : mUser) { // Determines whether the local document has this ID user
-                                        if (user.getUsername().equals(mIdString)) {
-                                            mIsSave = false;
-                                            break;
-                                        }
-                                    }
-                                    if (mIsSave) { // put the current user in to userlist
-                                        Security user = new Security(mIdString, mPwdString);
-                                        mUser.add(user);
-                                        //unfinished waiting for the verify process
-                                    }
-                                }else{
-//unfinished waiting for the verify process
-                                }
-                            }
-                        });
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    closeLoginingDlg();// close dialog box
-                    Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                break;
-            case R.id.login_more_user: // when click drop down list
-                if (mPop == null) {
-                    initPop();
-                }
-                if (!mPop.isShowing() && mUser.size() > 0) {
-                    Log.i(TAG, "the dropdown icon will change to pull up icon");
-                    mMoreUsers.setImageResource(R.drawable.login_more_down); // change icon
-                    mPop.showAsDropDown(mUserIdLinearLayout, 2, 1); // show pop box
-                }
-                break;
-            default:
-                break;
+        if(userName.equals("")||passWord.equals("")){
+            Toast.makeText(LoginActivity.this,"the username and password should not be empty",Toast.LENGTH_SHORT).show();
+//            showWarnSweetDialog("the username and password should not be empty");
+            return;
         }
+
+        String url =ServerIP.LOGINURL;
+        getCheckFromServer(url,userName,passWord);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        mIdEditText.setText(mUser.get(i).getUsername());
-        mPwdEditText.setText(mUser.get(i).getPassword());
-        mPop.dismiss();
-    }
+    /**
+     * Send the user name and password to the server for comparison.
+     * If it is successful, it will jump to the main interface of app.
+     * If it is wrong, it will refresh the UI to prompt the wrong login information
+     * @param url Server Address
+     * @param userName Username
+     * @param passWord Password
+     */
+    private void getCheckFromServer(String url,final String userName,String passWord)
+    {
+        OkHttpClient client = new OkHttpClient();
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("username", userName);
+        formBuilder.add("password", passWord);
+        Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(LoginActivity.this,"Server does not work now.",Toast.LENGTH_SHORT).show();
+//                        showWarnSweetDialog("Server does not work now.");
+                    }
+                });
 
-    @Override
-    //When the PopupWindow object is dismiss
-    public void onDismiss() {
-        // Log.i(TAG, "change to pull up icon");
-        mMoreUsers.setImageResource(R.drawable.login_more_up);
-    }
-
-    private void setListener() {
-        mIdEditText.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                mIdString = s.toString();
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                final String res = response.body().string();
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        if (res.equals("0"))
+                        {
+                            Toast.makeText(LoginActivity.this,"The username is not registered",Toast.LENGTH_SHORT).show();
+//                            showWarnSweetDialog("The username is not registered");
+                        }
+                        else if(res.equals("1"))
+                        {
+                            Toast.makeText(LoginActivity.this,"password is not right",Toast.LENGTH_SHORT).show();
+//                            showWarnSweetDialog("password is not right");
+                        }
+                        else//success
+                        {
+                            Toast.makeText(LoginActivity.this,res,Toast.LENGTH_SHORT).show();
+                            setLoggingStatus(LoginActivity.this,true);
+//                            showSuccessSweetDialog(res);
+                            sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("username", userName);
+                            editor.apply();
+                        }
 
-            public void afterTextChanged(Editable s) {
+                    }
+                });
             }
         });
-        mPwdEditText.addTextChangedListener(new TextWatcher() {
-
-            public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-                mPwdString = s.toString();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
-
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        mLoginButton.setOnClickListener(this);
-        mLoginMoreUserView.setOnClickListener(this);
-    }
-
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (isChecked) {
-            checkRemPWD.setChecked(true);
-        } else {
-            checkRemPWD.setChecked(false);
-        }
-    }
-
-    /*Adaptor of the Viewlist*/
-    class LoginAapter extends ArrayAdapter<Security> {
-
-        public LoginAapter(ArrayList<Security> users) {
-            super(LoginActivity.this,0,users);
-        }
-
-        public View getView(final int position, View convertView,
-                            ViewGroup parent) {
-            if (convertView == null) {
-                convertView = getLayoutInflater().inflate(
-                        R.layout.listview_item, null);
-            }
-
-            TextView userIdText = (TextView) convertView
-                    .findViewById(R.id.listview_userid);
-            userIdText.setText(getItem(position).getUsername());
-
-            ImageView deleteUser = (ImageView) convertView
-                    .findViewById(R.id.login_delete_user);
-            deleteUser.setOnClickListener(new OnClickListener() {
-                //  when click the deleteUser, it will delete the selected element in the mUser
-                @Override
-                public void onClick(View v) {
-
-                    if (getItem(position).getUsername().equals(mIdString)) {
-                        // if the username of detected user is same with the current text in the text field, clear them
-                        mIdString = "";
-                        mPwdString = "";
-                        mIdEditText.setText(mIdString);
-                        mPwdEditText.setText(mPwdString);
-                    }
-                    mUser.remove(getItem(position));
-                    mAdapter.notifyDataSetChanged(); // renew ListView
-                }
-            });
-            return convertView;
-        }
 
     }
 
-    /* save user list when exit the activity */
-    @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            LocalUserList.saveUserList(LoginActivity.this, mUser);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//    private void showWarnSweetDialog(String info)
+//    {
+//        SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.WARNING_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText(info);
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+//    }
+
+//    private void showSuccessSweetDialog(String info)
+//    {
+//        final SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setTitleText(info);
+//        pDialog.setCancelable(true);
+//        pDialog.show();
+//        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
+//        {
+//            @Override
+//            public void onClick(SweetAlertDialog sweetAlertDialog)
+//            {
+//                pDialog.dismiss();
+//            }
+//        });
+//    }
+    public static void  setLoggingStatus(Context context, boolean status)
+    {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("userLogStatus", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("LogStatus", status);
+        editor.apply();
     }
+
+    private void saveLogStatus()
+    {
+        SharedPreferences sps = getSharedPreferences("userLogStatus",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sps.edit();
+        editor.putBoolean("LogStatus", true);
+        editor.apply();
+    }
+
 }
