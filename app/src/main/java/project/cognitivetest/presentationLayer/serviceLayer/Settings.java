@@ -1,4 +1,4 @@
-package serviceLayer;
+package project.cognitivetest.presentationLayer.serviceLayer;
 
 public class Settings {
 

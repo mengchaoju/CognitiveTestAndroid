@@ -1,4 +1,4 @@
-package serviceLayer;
+package project.cognitivetest.presentationLayer.serviceLayer;
 
 /**
  * Created by saksh on 9/03/2019.

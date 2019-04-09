@@ -1,5 +1,6 @@
 package project.cognitivetest.presentationLayer;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,23 +15,34 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import project.cognitivetest.R;
-import serviceLayer.ClientService;
-import serviceLayer.Settings;
-import serviceLayer.VideoService;
+import project.cognitivetest.presentationLayer.serviceLayer.Settings;
+import project.cognitivetest.presentationLayer.serviceLayer.VideoService;
+import project.cognitivetest.presentationLayer.until.ServerIP;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
     private Button play, pause, image, finish;
     private ImageView video;
     private TextView infoText;
-    private ClientService client;
     private Bitmap copyBitmap;
     private Paint paint;
     private Canvas canvas;
     private Settings settings;
     private VideoService videoService;
+    private ServerIP serverIP;
+
+    private String pixelData;
     private float startX;
     private float startY;
     private int seq = 0;  //The sequence number of line currently drawn
@@ -38,6 +50,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private int isPause = 0;  //Indicate whether the video is paused
     private ArrayList<Long> timeLine;
     private int totalPoints;
+    private String userName = "sampleUser";
     private final String TAG = "VideoView";
 
     @Override
@@ -57,6 +70,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         infoText = (TextView) findViewById(R.id.video_information);
         timeLine = new ArrayList<>();
         settings = new Settings();
+        serverIP = new ServerIP();
 
         play.setEnabled(false);
         image.setEnabled(false);
@@ -157,14 +171,83 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+//    private void getDataFromServer() {
+//        client = new ClientService();
+//        client.sendData("{\"command\":\"getVideo\",\"message\":\""+participantID+"\"}");
+//        Log.d(TAG, "getting data from remote server.");
+//        while (true) {
+//            client.getData();
+//        }
+////        client.closeCon();
+//    }
+
     private void getDataFromServer() {
-        client = new ClientService();
-        client.sendData("{\"command\":\"getVideo\",\"message\":\""+participantID+"\"}");
-        Log.d(TAG, "getting data from remote server.");
-        while (true) {
-            client.getData();
+        String url = serverIP.getTRIALSDATAURL();
+        OkHttpClient client = new OkHttpClient();
+        FormBody.Builder formBuilder = new FormBody.Builder();
+        formBuilder.add("username", userName);
+        Request request1 = new Request.Builder().url(url).post(formBuilder.build()).build();
+        Call call = client.newCall(request1);
+        call.enqueue(new Callback()
+        {
+            @Override
+            public void onFailure(Call call, IOException e)
+            {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(VideoView.this,"Server failure.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException
+            {
+                try {
+                    String resp = response.body().string();  //The response from server
+                                                                   // 1 means success, 0 means failure.
+//                    switch (resp) {
+//                        case ("0"):
+//                            break;
+//                        case ("1"):
+//                            requestPixelData();
+//                            break;
+//                    }
+                    Log.d(TAG, "Server response:"+resp);
+                    pixelData = resp;
+                    Log.d(TAG, "pixel data:"+pixelData);
+                    videoService = new VideoService(pixelData);
+                    totalPoints = videoService.getTotalPoints();
+                    timeLine = videoService.getTimeline();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }
+
+    /**
+     * Request pixel data from server using okHttp GET() function
+     */
+    private void requestPixelData() {
+        String url = serverIP.getTRIALSDATAURL();
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder().url(url).build();
+        Call call = client.newCall(request);
+        try {
+            Log.d(TAG, "Successfully get pixel data from server.");
+            Response resp = call.execute();
+            pixelData = resp.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
-//        client.closeCon();
     }
 
     /**
@@ -174,11 +257,8 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
         @Override
         protected String doInBackground(String... params) {
-//            getDataFromServer();
-            String str = settings.getSamplePixelData();  //For testing
-            videoService = new VideoService(str);
-            totalPoints = videoService.getTotalPoints();
-            timeLine = videoService.getTimeline();
+            getDataFromServer();
+//            pixelData = settings.getSamplePixelData();  //For testing
             return "Executed";
         }
 

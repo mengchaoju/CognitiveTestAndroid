@@ -1,4 +1,4 @@
-package serviceLayer;
+package project.cognitivetest.presentationLayer.serviceLayer;
 import android.util.Log;
 
 import java.sql.Timestamp;
