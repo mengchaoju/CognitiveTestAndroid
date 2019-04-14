@@ -7,11 +7,35 @@
     tools:context=".presentationLayer.VideoView">
 
     <Button
-        android:id="@+id/play_button"
+        android:id="@+id/play_button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="Play Video" />
+        android:text="Play Recall Trial Video" />
+
+    <Button
+        android:id="@+id/play_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/play_button2"
+        android:layout_marginTop="-54dp"
+        android:text="Play Copy Trial Video" />
+
+    <Button
+        android:id="@+id/image_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/play_button2"
+        android:layout_marginBottom="-54dp"
+        android:text="Show Copy Trial Image" />
+
+    <Button
+        android:id="@+id/image_button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/image_button"
+        android:layout_marginBottom="-54dp"
+        android:text="Show Recall Trial Image" />
 
     <Button
         android:id="@+id/pause_button"
@@ -37,19 +61,18 @@
         android:text="textView" />
 
     <Button
-        android:id="@+id/image_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/play_button"
-        android:layout_marginBottom="-54dp"
-        android:text="Show Image" />
-
-    <Button
         android:id="@+id/finish_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Finish"
         android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/retry_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        android:visibility="visible" />
 
 </RelativeLayout>

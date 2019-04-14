@@ -32,7 +32,7 @@ import project.cognitivetest.presentationLayer.until.ServerIP;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
-    private Button play, pause, image, finish;
+    private Button play, pause, image, finish, play2, image2, retry;
     private ImageView video;
     private TextView infoText;
     private Bitmap copyBitmap;
@@ -47,7 +47,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private float startY;
     private int seq = 0;  //The sequence number of line currently drawn
     private String participantID = "abc";
+    private int isResponse = 0;  // Indicating whether the server respond or not. 0 means no response yet
     private int isPause = 0;  //Indicate whether the video is paused
+    private int trialCode = 0;  // 0 means copy trial, 1 means recall trial
     private ArrayList<Long> timeLine;
     private int totalPoints;
     private String userName = "sampleUser";
@@ -61,49 +63,103 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         initView();
     }
 
+    /**
+     * Initialize the views and the setting, timeLine and serverIP instance.
+     */
     private void initView() {
         play = (Button) findViewById(R.id.play_button);
+        play2 = (Button) findViewById(R.id.play_button2);
         pause = (Button) findViewById(R.id.pause_button);
         image = (Button) findViewById(R.id.image_button);
+        image2 = (Button) findViewById(R.id.image_button2);
         finish = (Button) findViewById(R.id.finish_button);
+        retry = (Button) findViewById(R.id.retry_button);
         video = (ImageView) findViewById(R.id.video_imageView);
         infoText = (TextView) findViewById(R.id.video_information);
+
         timeLine = new ArrayList<>();
         settings = new Settings();
         serverIP = new ServerIP();
+        isResponse = 0;
 
         play.setEnabled(false);
+        play2.setEnabled(false);
         image.setEnabled(false);
+        image2.setEnabled(false);
         infoText.setText(R.string.video_info_getData);
         play.setOnClickListener(this);
+        play2.setOnClickListener(this);
         pause.setOnClickListener(this);
         image.setOnClickListener(this);
+        image2.setOnClickListener(this);
         finish.setOnClickListener(this);
+        retry.setOnClickListener(this);
 
         new FetchData().execute("");
     }
 
+    /**
+     * The listener for the buttons.
+     * @param view
+     */
     public void onClick(View view) {
         switch (view.getId()) {
             case(R.id.play_button):
                 play.setVisibility(View.INVISIBLE);
+                play2.setVisibility(View.INVISIBLE);
                 video.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.VISIBLE);
                 image.setVisibility(View.INVISIBLE);
+                image2.setVisibility(View.INVISIBLE);
+                trialCode = 0;
+                playBtn();
+                break;
+            case(R.id.play_button2):
+                play.setVisibility(View.INVISIBLE);
+                play2.setVisibility(View.INVISIBLE);
+                video.setVisibility(View.VISIBLE);
+                pause.setVisibility(View.VISIBLE);
+                image.setVisibility(View.INVISIBLE);
+                image2.setVisibility(View.INVISIBLE);
+                trialCode = 1;
                 playBtn();
                 break;
             case(R.id.pause_button):
                 pauseBtn();
                 break;
             case(R.id.image_button):
+                play.setVisibility(View.INVISIBLE);
+                play2.setVisibility(View.INVISIBLE);
+                video.setVisibility(View.VISIBLE);
+                image.setVisibility(View.INVISIBLE);
+                image2.setVisibility(View.INVISIBLE);
+                trialCode = 0;
+                imageBtn();
+                break;
+            case(R.id.image_button2):
+                play.setVisibility(View.INVISIBLE);
+                play2.setVisibility(View.INVISIBLE);
+                video.setVisibility(View.VISIBLE);
+                image.setVisibility(View.INVISIBLE);
+                image2.setVisibility(View.INVISIBLE);
+                trialCode = 1;
                 imageBtn();
                 break;
             case(R.id.finish_button):
                 finishBtn();
                 break;
+            case(R.id.retry_button):
+                // TODO: Not functional yet.
+                Log.d(TAG, "Click on retry button");
+                new FetchData().execute("");
+                break;
         }
     }
 
+    /**
+     * Dealing with the play button.
+     * When clicking, play the video based on the requested user data.
+     */
     private void playBtn() {
         Log.d(TAG, "Click on play button.");
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.white_background);
@@ -111,14 +167,17 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         // Create a pen instance
         paint = new Paint();
         // Create a sketchpad instance
-        paint.setStrokeWidth(12);
+        paint.setStrokeWidth(settings.getStrokeWidth());
         canvas = new Canvas(copyBitmap);
         canvas.drawBitmap(bitmap, new Matrix(), paint);
         video.setImageBitmap(copyBitmap);
         Log.d(TAG, "Video player initialised!");
-        new VideoHandler().execute("");
+        new VideoTimeLineHandler().execute("");
     }
 
+    /**
+     * The pause button. When clicking, pause the video play and change to a continue button.
+     */
     private void pauseBtn() {
         Log.d(TAG, "Click on pause button.");
         if (isPause == 0) {
@@ -130,9 +189,25 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         }
     }
 
+    /**
+     * The image button. When clicking, show the image.
+     */
     private void imageBtn() {
         Log.d(TAG,"Click on showImage button");
-
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.white_background);
+        copyBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
+        // Create a pen instance
+        paint = new Paint();
+        // Create a sketchpad instance
+        paint.setStrokeWidth(settings.getStrokeWidth());
+        canvas = new Canvas(copyBitmap);
+        canvas.drawBitmap(bitmap, new Matrix(), paint);
+        video.setImageBitmap(copyBitmap);
+        Log.d(TAG, "ImageView initialised!");
+        finish.setVisibility(View.VISIBLE);
+        for (int i=0;i<totalPoints;i++) {
+            playVideo();
+        }
     }
 
     /**
@@ -142,9 +217,11 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private void finishBtn() {
         Log.d(TAG, "Click on finish button");
         play.setVisibility(View.VISIBLE);
+        play2.setVisibility(View.VISIBLE);
         video.setVisibility(View.INVISIBLE);
         pause.setVisibility(View.INVISIBLE);
         image.setVisibility(View.VISIBLE);
+        image2.setVisibility(View.VISIBLE);
         finish.setVisibility(View.INVISIBLE);
         seq = 0;  // Reset the counter.
         videoService.resetSequence();
@@ -152,6 +229,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         paint.reset();
     }
 
+    /**
+     * This function deals with drawing all the pixels on the screen.
+     */
     private void playVideo() {
         if (videoService.getSeq()!=seq) {
             seq = videoService.getSeq();
@@ -171,16 +251,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         }
     }
 
-//    private void getDataFromServer() {
-//        client = new ClientService();
-//        client.sendData("{\"command\":\"getVideo\",\"message\":\""+participantID+"\"}");
-//        Log.d(TAG, "getting data from remote server.");
-//        while (true) {
-//            client.getData();
-//        }
-////        client.closeCon();
-//    }
-
+    /**
+     * Request pixel data from server using okHttp POST() function
+     */
     private void getDataFromServer() {
         String url = serverIP.getTRIALSDATAURL();
         OkHttpClient client = new OkHttpClient();
@@ -223,30 +296,18 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                     videoService = new VideoService(pixelData);
                     totalPoints = videoService.getTotalPoints();
                     timeLine = videoService.getTimeline();
+                    isResponse = 1;
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
 
             }
         });
-    }
-
-    /**
-     * Request pixel data from server using okHttp GET() function
-     */
-    private void requestPixelData() {
-        String url = serverIP.getTRIALSDATAURL();
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder().url(url).build();
-        Call call = client.newCall(request);
-        try {
-            Log.d(TAG, "Successfully get pixel data from server.");
-            Response resp = call.execute();
-            pixelData = resp.body().string();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        while(true) {
+            if (isResponse == 1) {
+                retry.setVisibility(View.INVISIBLE);
+                break;
+            }
         }
     }
 
@@ -266,7 +327,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         protected void onPostExecute(String result) {
             //When finish fetching data, enable the play button, show information
             play.setEnabled(true);
+            play2.setEnabled(true);
             image.setEnabled(true);
+            image2.setEnabled(true);
             infoText.setVisibility(View.INVISIBLE);
             showToast("Data fetching success!");
         }
@@ -283,9 +346,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     }
 
     /**
-     * Do in background, dealing with getting data from server
+     * Do in background, dealing with the timeline of video playing.
      */
-    private class VideoHandler extends AsyncTask<String, Void, String> {
+    private class VideoTimeLineHandler extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
             Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
