@@ -24,10 +24,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import project.cognitivetest.R;
-import serviceLayer.ClientService;
 import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
+import serviceLayer.UploadDataService;
+import until.ServerIP;
 
 public class FirstTrialView extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,9 +44,11 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int ifMark = 0;  //0 means draw, 1 means correct(mark).
     //Indicating whether drawing activity is running or not, 1 = running.
     private int runningFlag = 0;
+    private String userName = "sampleUser";  // The username of this participant
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
+    private UploadDataService uploadService, uploadService2;
 
     // The available colours
     private int startColour;
@@ -53,6 +56,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int[] colourRange;
     private int colourFlag = 0;
     private int colourFlag2 = 0;
+    private int enableColour;
 
     private String TAG = "FirstTrial";
 
@@ -154,7 +158,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         timer.setTime(3);
         this.runningFlag = 0;  //Mark that this activity is no longer running
         showToast("Updating... please wait!");
-        new LongOperation().execute("");
+        new UploadData().execute("");
     }
 
     /**
@@ -204,6 +208,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         startColour = settings.getStartColour();
         endColour = settings.getEndColour();
         colourRange = settings.getColourRange();
+        enableColour = settings.getEndColour();
 
         //Initialise the view
         sketchpad = (ImageView) findViewById(R.id.sketchpad);
@@ -217,13 +222,15 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         correctBtn.setOnClickListener(this);
     }
 
-    //Change the colour of painting
+    //Change the colour of painting if the function is enabled
     public void changeColor(View view) {
-        if (colourFlag2%50 == 0 && colourFlag2!=0) {
-            startColour = colourRange[colourFlag2/50%colourRange.length];
-            endColour = colourRange[(colourFlag2/50+1)%colourRange.length];
+        if (enableColour == 1) {
+            if (colourFlag2%50 == 0 && colourFlag2!=0) {
+                startColour = colourRange[colourFlag2/50%colourRange.length];
+                endColour = colourRange[(colourFlag2/50+1)%colourRange.length];
+            }
+            paint.setColor(getNextColor(startColour, endColour, colourFlag%50));
         }
-        paint.setColor(getNextColor(startColour, endColour, colourFlag%50));
     }
 
     //Get the next colour
@@ -265,7 +272,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             tempStr = tempStr + tempArr.get(i)+";";
         }
 //        System.out.println("tempStr:"+tempStr);
-        return "{\"command\":\"firstTrialData\",\"message\":\""+tempStr+"\"}";
+        return tempStr;
     }
 
     //Construct the timer data to be sent to the server to String
@@ -276,24 +283,53 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         for (int i=0; i<tm.length; i++) {
             tempStr = tempStr + tm[i].toString()+";";
         }
-        return "{\"command\":\"firstTrialTimer\",\"message\":\""+tempStr+"\"}";
+        return tempStr;
     }
 
     /**
      * Do in background, dealing with getting data from and data transmission
      */
-    private class LongOperation extends AsyncTask<String, Void, String> {
+    private class UploadData extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
             Log.d(TAG,"saving data");
-            //Send the data then close the socket
-            ClientService client = new ClientService();
-            client.sendData(dataConstructor());
-            client.closeCon();
-            ClientService client2 = new ClientService();
-            client2.sendData(dataConstructor2());
-            client2.closeCon();
+            String data = dataConstructor();  // The pixel data
+            String data2 = dataConstructor2();  // The time line data
+            String url = ServerIP.UPLOADCOPYPIXELS;
+            String url2 = ServerIP.UPLOADCOPYTIME;
+            uploadService = new UploadDataService(url, userName, data);
+            uploadService.send();
+            // Check the state of uploading service
+            while (true) {
+                showToast("Try to connect to server...");
+                try {
+                    Thread.sleep(settings.getRetryTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                int ifSuc = uploadService.getIfSuccess();
+                if (ifSuc == 1) {
+                    break;
+                }
+                uploadService.send();  // Retry sending after given time
+            }
+            uploadService2 = new UploadDataService(url2, userName, data2);
+            uploadService2.send();
+            // Check the state of uploading service
+            while (true) {
+                showToast("Try to connect to server...");
+                try {
+                    Thread.sleep(settings.getRetryTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                int ifSuc = uploadService2.getIfSuccess();
+                if (ifSuc == 1) {
+                    break;
+                }
+                uploadService2.send();  // Retry sending
+            }
             return "Executed";
         }
 

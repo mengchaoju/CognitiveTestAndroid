@@ -19,7 +19,7 @@ public class DataCache {
      */
     public void save (String str) {
         arrayList.add(str);
-        Log.d(TAG, "Data saved:"+str);
+//        Log.d(TAG, "Data saved:"+str);
     }
 
     public ArrayList<String> getArr() {
