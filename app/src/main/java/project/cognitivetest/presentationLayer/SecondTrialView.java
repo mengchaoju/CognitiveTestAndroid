@@ -75,6 +75,11 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         paint.setXfermode(null);
         paint.setStrokeWidth(settings.getStrokeWidth());  //The width of drawing pen
         paint.setStrokeCap(Paint.Cap.ROUND);  //Set the cap to round
+        if (enableColour == 1) {
+            paint.setColor(startColour);
+        } else {
+            paint.setColor(Color.BLACK);
+        }
         canvas = new Canvas(copyBitmap);
         canvas.drawBitmap(bitmap, new Matrix(), paint);
         sketchpad.setImageBitmap(copyBitmap);
@@ -171,10 +176,10 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             Log.d(TAG, "start correcting!");
             this.ifMark = 1;
             correctBtn.setText("draw");
-            porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.LIGHTEN);
+            porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
             paint.setXfermode(porterDuffXfermode);
             paint.setStrokeWidth(settings.getMarkPenWidth());
-            paint.setColor(0xff9900);
+            paint.setColor(Color.YELLOW);
         } else {
             Log.d(TAG, "finish correcting!");
             this.ifMark = 0;
@@ -182,6 +187,11 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             paint.setXfermode(null);
             paint.setStrokeWidth(settings.getStrokeWidth());
             paint.setColor(startColour);
+            if (enableColour == 1) {
+                paint.setColor(startColour);
+            } else {
+                paint.setColor(Color.BLACK);
+            }
         }
     }
 
@@ -208,7 +218,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         startColour = settings.getStartColour();
         endColour = settings.getEndColour();
         colourRange = settings.getColourRange();
-        enableColour = settings.getEndColour();  // If enabling auto-change pen colour or not
+        enableColour = settings.getEnableColour();  // If enabling auto-change pen colour or not
 
         //Initialise the view
         sketchpad = (ImageView) findViewById(R.id.sketchpad_2);
@@ -230,6 +240,10 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
                 endColour = colourRange[(colourFlag2 / 50 + 1) % colourRange.length];
             }
             paint.setColor(getNextColor(startColour, endColour, colourFlag % 50));
+        } else if (ifMark == 1){
+            paint.setColor(Color.YELLOW);
+        } else {
+            paint.setColor(Color.BLACK);
         }
     }
 
@@ -301,35 +315,43 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             String url2 = ServerIP.UPLOADRECALLTIME;
             uploadService = new UploadDataService(url, userName, data);
             uploadService.send();
-            // Check the state of uploading service
+            // Check the state of uploading service, if server fails, retry sending
+            int counter = 1;
             while (true) {
                 showToast("Try to connect to server...");
-                try {
-                    Thread.sleep(settings.getRetryTime());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 int ifSuc = uploadService.getIfSuccess();
                 if (ifSuc == 1) {
                     break;
                 }
-                uploadService.send();  // Retry sending after given time
-            }
-            uploadService2 = new UploadDataService(url2, userName, data2);
-            uploadService2.send();
-            // Check the state of uploading service
-            while (true) {
-                showToast("Try to connect to server...");
+                if (counter%20 == 0){
+                    uploadService.send();  // Retry sending after given time
+                }
                 try {
                     Thread.sleep(settings.getRetryTime());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                counter += 1;
+            }
+            uploadService2 = new UploadDataService(url2, userName, data2);
+            uploadService2.send();
+            // Check the state of uploading service, if server fails, retry sending
+            counter = 1;
+            while (true) {
+                showToast("Try to connect to server...");
                 int ifSuc = uploadService2.getIfSuccess();
                 if (ifSuc == 1) {
                     break;
                 }
-                uploadService2.send();  // Retry sending
+                if (counter%20 == 0){
+                    uploadService2.send();  // Retry sending after given time
+                }
+                try {
+                    Thread.sleep(settings.getRetryTime());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                counter += 1;
             }
             return "Executed";
         }
