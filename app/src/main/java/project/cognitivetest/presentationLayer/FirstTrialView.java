@@ -28,7 +28,7 @@ import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
 import serviceLayer.UploadDataService;
-import until.ServerIP;
+import util.ServerIP;
 
 public class FirstTrialView extends AppCompatActivity implements View.OnClickListener {
 
@@ -162,6 +162,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private void finishDraw() {
         timer.setTime(3);
         this.runningFlag = 0;  //Mark that this activity is no longer running
+        sketchpad.setEnabled(false);  // Disable the sketchpad.
         showToast("Updating... please wait!");
         new UploadData().execute("");
     }
@@ -229,6 +230,9 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         startBtn.setOnClickListener(this);
         finishBtn.setOnClickListener(this);
         correctBtn.setOnClickListener(this);
+
+        Log.d(TAG, "Activity view initialized.");
+        Log.d(TAG, "Participant username:"+userName);
     }
 
     //Change the colour of painting if the function is enabled
@@ -309,9 +313,8 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             Log.d(TAG,"saving data");
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
-            String url = ServerIP.UPLOADCOPYPIXELS;
-            String url2 = ServerIP.UPLOADCOPYTIME;
-            uploadService = new UploadDataService(url, userName, data);
+            String url = ServerIP.UPLOADCOPY;
+            uploadService = new UploadDataService(url, userName, data, data2);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;
@@ -331,32 +334,15 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
                 }
                 counter += 1;
             }
-            uploadService2 = new UploadDataService(url2, userName, data2);
-            uploadService2.send();
-            // Check the state of uploading service, if server fails, retry sending
-            counter = 1;
-            while (true) {
-                showToast("Try to connect to server...");
-                int ifSuc = uploadService2.getIfSuccess();
-                if (ifSuc == 1) {
-                    break;
-                }
-                if (counter%20 == 0){
-                    uploadService2.send();  // Retry sending after given time
-                }
-                try {
-                    Thread.sleep(settings.getRetryTime());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                counter += 1;
-            }
             return "Executed";
         }
 
         @Override
         protected void onPostExecute(String result) {
+            // When finish uploading, goto next page.
             Intent intent=new Intent(FirstTrialView.this, ContinuePage.class);
+            // Pass the username of participant to next activity.
+            intent.putExtra("p_username", userName);
             startActivity(intent);
         }
 

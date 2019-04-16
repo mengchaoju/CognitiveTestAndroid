@@ -1,4 +1,4 @@
-package until;
+package util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

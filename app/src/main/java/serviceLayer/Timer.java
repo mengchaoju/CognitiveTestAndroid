@@ -44,10 +44,6 @@ public class Timer {
         return timeArr;
     }
 
-    public Timestamp getT4() {
-        return T4;
-    }
-
     public Timestamp getCurTime() {
         return new java.sql.Timestamp(System.currentTimeMillis());
     }

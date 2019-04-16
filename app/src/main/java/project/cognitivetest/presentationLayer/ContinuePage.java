@@ -21,6 +21,7 @@ public class ContinuePage extends AppCompatActivity {
     private TextView text;
     private Button button;
     private int time;
+    private String userName;
     private final String TAG = "ContinuePage";
     private int ifCancel = 0; //Indicate whether the background task is canceled
 
@@ -51,11 +52,17 @@ public class ContinuePage extends AppCompatActivity {
         button = (Button) findViewById(R.id.button);
         time = settings.getTimeBetween2Trials();
         text.setText(R.string.continue_text);
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("p_username");
+        Log.d(TAG, "Activity view initialized.");
+        Log.d(TAG, "Participant username:"+userName);
     }
 
     private void continueBtn() {
         this.ifCancel = 1;
         Intent intent=new Intent(ContinuePage.this, SecondTrialView.class);
+        // Pass the username of participant to next activity.
+        intent.putExtra("p_username", userName);
         startActivity(intent);
     }
 

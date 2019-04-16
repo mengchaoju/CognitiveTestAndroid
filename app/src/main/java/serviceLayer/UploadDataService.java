@@ -14,18 +14,20 @@ public class UploadDataService {
     private int ifSuccess = 0;  // 0 means fail, 1 means success.
     private String url;
     private String userName;
-    private String data;
+    private String data1, data2;
 
     /**
      * Build function
      * @param url the url to be apply POST function on
      * @param userName the userName of this data
-     * @param data the data to be sent in String format
+     * @param data1,data2 the data to be sent in String format
+     *                    data1 is pixels data, data2 is time data
      */
-    public UploadDataService(String url, String userName, String data) {
+    public UploadDataService(String url, String userName, String data1, String data2) {
         this.url = url;
         this.userName = userName;
-        this.data = data;
+        this.data1 = data1;
+        this.data2 = data2;
     }
 
     public int getIfSuccess() {
@@ -36,7 +38,8 @@ public class UploadDataService {
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("username", userName);
-        formBuilder.add("data", data);
+        formBuilder.add("pixelData", data1);
+        formBuilder.add("timeData", data2);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback()

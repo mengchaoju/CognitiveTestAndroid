@@ -1,6 +1,7 @@
 package project.cognitivetest.presentationLayer;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -27,7 +28,7 @@ import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
 import serviceLayer.UploadDataService;
-import until.ServerIP;
+import util.ServerIP;
 
 public class SecondTrialView extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,7 +44,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
     private int ifMark = 0;  //0 means draw, 1 means correct(mark).
     //Indicating whether drawing activity is running or not, 1 = running.
     private int runningFlag = 0;
-    private String userName = "sampleUser";  // The username of this participant
+    private String userName;  // The username of this participant
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
@@ -158,10 +159,10 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
      *  When clicking on finish button, should go to the next page and stop the timer.
      *  Also, data will be automatically sent to the server.
      */
-
     private void finishDraw() {
         timer.setTime(3);
         this.runningFlag = 0;  //Mark that this activity is no longer running
+        sketchpad.setEnabled(false);
         showToast("Updating... please wait!");
         new UploadData().execute("");
     }
@@ -186,7 +187,6 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             correctBtn.setText("correct");
             paint.setXfermode(null);
             paint.setStrokeWidth(settings.getStrokeWidth());
-            paint.setColor(startColour);
             if (enableColour == 1) {
                 paint.setColor(startColour);
             } else {
@@ -230,7 +230,14 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         startBtn.setOnClickListener(this);
         finishBtn.setOnClickListener(this);
         correctBtn.setOnClickListener(this);
+
+        // Get username from previous activity
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("p_username");
+        Log.d(TAG, "Activity view initialized.");
+        Log.d(TAG, "Participant username:"+userName);
     }
+
 
     //Change the colour of painting if the function is enabled
     public void changeColor(View view) {
@@ -307,13 +314,11 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected String doInBackground(String... params) {
-            //Send the data then close the socket
             Log.d(TAG,"saving data");
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
-            String url = ServerIP.UPLOADRECALLPIXELS;
-            String url2 = ServerIP.UPLOADRECALLTIME;
-            uploadService = new UploadDataService(url, userName, data);
+            String url = ServerIP.UPLOADRECALL;
+//            uploadService = new UploadDataService(url, userName, data);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;
@@ -325,26 +330,6 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
                 }
                 if (counter%20 == 0){
                     uploadService.send();  // Retry sending after given time
-                }
-                try {
-                    Thread.sleep(settings.getRetryTime());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                counter += 1;
-            }
-            uploadService2 = new UploadDataService(url2, userName, data2);
-            uploadService2.send();
-            // Check the state of uploading service, if server fails, retry sending
-            counter = 1;
-            while (true) {
-                showToast("Try to connect to server...");
-                int ifSuc = uploadService2.getIfSuccess();
-                if (ifSuc == 1) {
-                    break;
-                }
-                if (counter%20 == 0){
-                    uploadService2.send();  // Retry sending after given time
                 }
                 try {
                     Thread.sleep(settings.getRetryTime());
