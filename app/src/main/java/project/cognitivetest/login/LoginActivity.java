@@ -25,6 +25,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
 import project.cognitivetest.until.ServerIP;
 
@@ -110,7 +111,7 @@ public class LoginActivity extends Activity implements OnClickListener{
                     @Override
                     public void run()
                     {
-                        Toast.makeText(LoginActivity.this,"Server does not work now.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this,"Server failure.",Toast.LENGTH_SHORT).show();
 //                        showWarnSweetDialog("Server does not work now.");
                     }
                 });
@@ -128,15 +129,15 @@ public class LoginActivity extends Activity implements OnClickListener{
                     {
                         if (res.equals("not find username"))
                         {
-                            Toast.makeText(LoginActivity.this,"The username is not registered",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,"The username is not registered.",Toast.LENGTH_SHORT).show();
 //                            showWarnSweetDialog("The username is not registered");
                         }
                         else if(res.equals("password is not right"))
                         {
-                            Toast.makeText(LoginActivity.this,"password is not right",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,"Incorrect username or password.",Toast.LENGTH_SHORT).show();
 //                            showWarnSweetDialog("password is not right");
                         }
-                        else//success
+                        else  //success
                         {
                             Toast.makeText(LoginActivity.this,res,Toast.LENGTH_SHORT).show();
                             setLoggingStatus(LoginActivity.this,true);
@@ -145,13 +146,23 @@ public class LoginActivity extends Activity implements OnClickListener{
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("username", userName);
                             editor.apply();
+                            goToHomePage();
                         }
 
                     }
                 });
             }
         });
+    }
 
+    /**
+     * When successfully log in, go to the home page.
+     * And pass the username to the next activity.
+     */
+    private void goToHomePage() {
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        intent.putExtra("staffUsername", username);  // This is the username of staff
+        startActivity(intent);
     }
 
 //    private void showWarnSweetDialog(String info)
