@@ -27,7 +27,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
-import project.cognitivetest.until.ServerIP;
+import serviceLayer.util.ServerIP;
 
 public class LoginActivity extends Activity implements OnClickListener{
 

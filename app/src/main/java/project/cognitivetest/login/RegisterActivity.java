@@ -28,7 +28,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.R;
-import project.cognitivetest.until.ServerIP;
+import serviceLayer.util.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/2

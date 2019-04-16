@@ -30,10 +30,10 @@
             android:exported="false"></activity>
         <activity android:name=".newTest.Activity_PtReg"></activity>
         <activity android:name=".history.Activity_history"></activity>
-        <activity android:name=".presentationLayer.IntroductionView"></activity>
-        <activity android:name=".presentationLayer.SecondTrialView" />
-        <activity android:name=".presentationLayer.ContinuePage" />
-        <activity android:name=".presentationLayer.FirstTrialView" />
+        <activity android:name=".trials.IntroductionView"></activity>
+        <activity android:name=".trials.SecondTrialView" />
+        <activity android:name=".trials.ContinuePage" />
+        <activity android:name=".trials.FirstTrialView" />
     </application>
 
 </manifest>

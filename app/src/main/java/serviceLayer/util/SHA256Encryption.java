@@ -1,4 +1,4 @@
-package project.cognitivetest.until;
+package serviceLayer.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

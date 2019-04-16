@@ -1,4 +1,4 @@
-package project.cognitivetest.presentationLayer;
+package project.cognitivetest.trials;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -30,7 +30,7 @@ import serviceLayer.Timer;
 import serviceLayer.UploadDataService;
 import util.ServerIP;
 
-public class FirstTrialView extends AppCompatActivity implements View.OnClickListener {
+public class SecondTrialView extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView sketchpad;
     private Button startBtn, finishBtn, correctBtn;
@@ -44,7 +44,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int ifMark = 0;  //0 means draw, 1 means correct(mark).
     //Indicating whether drawing activity is running or not, 1 = running.
     private int runningFlag = 0;
-    private String userName = "sampleUser";  // The username of this participant
+    private String userName;  // The username of this participant
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
@@ -58,13 +58,13 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int colourFlag2 = 0;
     private int enableColour;
 
-    private String TAG = "FirstTrial";
+    private String TAG = "SecondTrial";
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_first_trial_view);
+        setContentView(R.layout.activity_second_trial_view);
 
         initView();
 
@@ -142,13 +142,13 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick (View v) {
         switch (v.getId()) {
-            case R.id.start:
+            case R.id.start_2:
                 startDraw();
                 break;
-            case R.id.finish:
+            case R.id.finish_2:
                 finishDraw();
                 break;
-            case R.id.correct:
+            case R.id.correct_2:
                 correct();
                 break;
             default:
@@ -157,13 +157,13 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     }
 
     /**
-     *  When clicking on finish button, should go to the next page and stop the timer
+     *  When clicking on finish button, should go to the next page and stop the timer.
      *  Also, data will be automatically sent to the server.
      */
     private void finishDraw() {
         timer.setTime(3);
         this.runningFlag = 0;  //Mark that this activity is no longer running
-        sketchpad.setEnabled(false);  // Disable the sketchpad.
+        sketchpad.setEnabled(false);
         showToast("Updating... please wait!");
         new UploadData().execute("");
     }
@@ -218,19 +218,22 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         startColour = settings.getStartColour();
         endColour = settings.getEndColour();
         colourRange = settings.getColourRange();
-        enableColour = settings.getEnableColour();
+        enableColour = settings.getEnableColour();  // If enabling auto-change pen colour or not
 
         //Initialise the view
-        sketchpad = (ImageView) findViewById(R.id.sketchpad);
-        startBtn = (Button) findViewById(R.id.start);
-        finishBtn = (Button) findViewById(R.id.finish);
-        correctBtn = (Button) findViewById(R.id.correct);
+        sketchpad = (ImageView) findViewById(R.id.sketchpad_2);
+        startBtn = (Button) findViewById(R.id.start_2);
+        finishBtn = (Button) findViewById(R.id.finish_2);
+        correctBtn = (Button) findViewById(R.id.correct_2);
 
         //Set the button listener
         startBtn.setOnClickListener(this);
         finishBtn.setOnClickListener(this);
         correctBtn.setOnClickListener(this);
 
+        // Get username from previous activity
+        Intent intent = getIntent();
+        userName = intent.getStringExtra("p_username");
         Log.d(TAG, "Activity view initialized.");
         Log.d(TAG, "Participant username:"+userName);
     }
@@ -238,11 +241,11 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     //Change the colour of painting if the function is enabled
     public void changeColor(View view) {
         if (enableColour == 1) {
-            if (colourFlag2%50 == 0 && colourFlag2!=0) {
-                startColour = colourRange[colourFlag2/50%colourRange.length];
-                endColour = colourRange[(colourFlag2/50+1)%colourRange.length];
+            if (colourFlag2 % 50 == 0 && colourFlag2 != 0) {
+                startColour = colourRange[colourFlag2 / 50 % colourRange.length];
+                endColour = colourRange[(colourFlag2 / 50 + 1) % colourRange.length];
             }
-            paint.setColor(getNextColor(startColour, endColour, colourFlag%50));
+            paint.setColor(getNextColor(startColour, endColour, colourFlag % 50));
         } else if (ifMark == 1){
             paint.setColor(Color.YELLOW);
         } else {
@@ -313,7 +316,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             Log.d(TAG,"saving data");
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
-            String url = ServerIP.UPLOADCOPY;
+            String url = ServerIP.UPLOADRECALL;
             uploadService = new UploadDataService(url, userName, data, data2);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
@@ -339,11 +342,8 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String result) {
-            // When finish uploading, goto next page.
-            Intent intent=new Intent(FirstTrialView.this, ContinuePage.class);
-            // Pass the username of participant to next activity.
-            intent.putExtra("p_username", userName);
-            startActivity(intent);
+//            Intent intent=new Intent(SecondTrialView.this, ContinuePage.class);
+//            startActivity(intent);
         }
 
         @Override
@@ -387,10 +387,10 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     // To show coordinate information on screen
     private void showToast(final String text) {
 
-        FirstTrialView.this.runOnUiThread(new Runnable() {
+        SecondTrialView.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(FirstTrialView.this, text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SecondTrialView.this, text, Toast.LENGTH_SHORT).show();
             }
         });
 

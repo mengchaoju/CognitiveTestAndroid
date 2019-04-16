@@ -5,7 +5,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import project.cognitivetest.until.SHA256Encryption;
+import serviceLayer.util.SHA256Encryption;
 
 /**
  * Created by 50650 on 2019/4/2

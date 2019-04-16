@@ -4,6 +4,7 @@ package project.cognitivetest.newTest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
@@ -26,12 +27,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.R;
-import project.cognitivetest.until.ServerIP;
+import project.cognitivetest.trials.IntroductionView;
+import serviceLayer.util.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/16
  */
 public class Activity_PtReg extends Activity {
+    private String participantID;
     private static final String TAG = "ParticipantRegisterActivity";
 
 
@@ -119,13 +122,14 @@ public class Activity_PtReg extends Activity {
         progressDialog.show();
 
         String participantID = inputID.getText().toString();
+        this.participantID = participantID;  // Update global variable
         String firstName = inputFirstName.getText().toString();
         String familyName = inputFamilyName.getText().toString();
         String gender = inputGender.getText().toString();
         String DOB = inputDoB.getText().toString();
 
         String url = ServerIP.PARTICIPANTSIGNUP;
-        registeParticipantToServer(url,participantID,firstName,
+        registerParticipantToServer(url,participantID,firstName,
                 familyName,DOB,gender);
 
         new android.os.Handler().postDelayed(new Runnable() {
@@ -139,7 +143,6 @@ public class Activity_PtReg extends Activity {
     }
 
     private void onSignupSuccess(){
-
         btnStartTest.setEnabled(true);
         setResult(RESULT_OK,null);
         onDestroy();
@@ -154,7 +157,7 @@ public class Activity_PtReg extends Activity {
 
     }
 
-    private void registeParticipantToServer(String url,
+    private void registerParticipantToServer(String url,
                                          final String participantID,
                                          String firstName,
                                          String familyName,
@@ -202,7 +205,7 @@ public class Activity_PtReg extends Activity {
                         }
                         else
                         {
-                            finish();
+                            gotoTrials();
                             //                            sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
                             //                            SharedPreferences.Editor editor = sharedPreferences.edit();
                             //                            editor.putString("username", userName);
@@ -267,6 +270,11 @@ public class Activity_PtReg extends Activity {
         return valid;
     }
 
+    private void gotoTrials() {
+        Intent intent = new Intent(Activity_PtReg.this, IntroductionView.class);
+        intent.putExtra("participantID", participantID);
+        startActivity(intent);
+    }
 
 
 }

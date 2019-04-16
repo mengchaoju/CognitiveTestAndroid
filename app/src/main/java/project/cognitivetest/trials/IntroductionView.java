@@ -1,4 +1,4 @@
-package project.cognitivetest.presentationLayer;
+package project.cognitivetest.trials;
 
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;

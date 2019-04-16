@@ -3,7 +3,7 @@ package project.cognitivetest.modules;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
-import project.cognitivetest.until.SHA256Encryption;
+
 /**
  * Created by 50650 on 2019/3/27
  */
