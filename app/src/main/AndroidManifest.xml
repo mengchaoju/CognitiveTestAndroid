@@ -18,8 +18,14 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
         <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".login.LoginActivity"></activity>
-        <activity android:name=".trials.VideoView"></activity>
+        <activity android:name=".login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".video_image.VideoView"></activity>
         <activity
             android:name=".login.RegisterActivity"
             android:exported="false"></activity>

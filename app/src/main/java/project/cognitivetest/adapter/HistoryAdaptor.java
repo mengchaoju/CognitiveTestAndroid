@@ -42,7 +42,7 @@ public class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.PtViewHo
     public void onBindViewHolder(PtViewHolder holder, int position) {
         holder.ptIDText.setText(mParticipants.get(position).getParticipantID());
         holder.ptNameText.setText(mParticipants.get(position).getFirstName()+" "+
-        mParticipants.get(position).getFamilyName());
+                mParticipants.get(position).getFamilyName());
         holder.ptGenderText.setText(mParticipants.get(position).getGender());
         holder.ptDoBText.setText(mParticipants.get(position).getDateOfBirth());
     }

@@ -28,7 +28,7 @@ import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
 import serviceLayer.UploadDataService;
-import util.ServerIP;
+import serviceLayer.util.ServerIP;
 
 public class FirstTrialView extends AppCompatActivity implements View.OnClickListener {
 

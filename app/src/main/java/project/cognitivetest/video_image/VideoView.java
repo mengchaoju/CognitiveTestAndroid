@@ -1,6 +1,5 @@
-package project.cognitivetest.presentationLayer;
+package project.cognitivetest.video_image;
 
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -26,9 +25,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.R;
-import project.cognitivetest.presentationLayer.serviceLayer.Settings;
-import project.cognitivetest.presentationLayer.serviceLayer.VideoService;
-import project.cognitivetest.presentationLayer.until.ServerIP;
+import serviceLayer.Settings;
+import serviceLayer.VideoService;
+import serviceLayer.util.ServerIP;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
@@ -255,7 +254,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
      * Request pixel data from server using okHttp POST() function
      */
     private void getDataFromServer() {
-        String url = serverIP.getTRIALSDATAURL();
+        String url = serverIP.TRIALSDATAURL;
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("username", userName);
