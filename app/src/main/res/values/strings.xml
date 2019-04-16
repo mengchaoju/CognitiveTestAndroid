@@ -29,6 +29,9 @@
     <string name="hint_login_pwdEditField">Password</string>
     <string name="hint_login_usernameEditField">Username</string>
 
+    <string name="continue_text">Now please hand the tablet to the clinician.</string>
+    <string name="introduction_text">This is an introduction.</string>
+
     <string-array name="all_languages">
         <item>Participant ID</item>
         <item>Participant First Name</item>
@@ -36,4 +39,4 @@
         <item>Participant Date of Birth</item>
     </string-array>
 
-</resources>
+    </resources>
