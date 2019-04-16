@@ -73,7 +73,9 @@ public class LoginActivity extends Activity implements OnClickListener{
         String passWord = mPwdEditText.getText().toString();
 
         if(userName.equals("")||passWord.equals("")){
-            Toast.makeText(LoginActivity.this,"the username and password should not be empty",Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this,
+                    "the username and password should not be empty",
+                    Toast.LENGTH_SHORT).show();
 //            showWarnSweetDialog("the username and password should not be empty");
             return;
         }
@@ -124,12 +126,12 @@ public class LoginActivity extends Activity implements OnClickListener{
                     @Override
                     public void run()
                     {
-                        if (res.equals("0"))
+                        if (res.equals("not find username"))
                         {
                             Toast.makeText(LoginActivity.this,"The username is not registered",Toast.LENGTH_SHORT).show();
 //                            showWarnSweetDialog("The username is not registered");
                         }
-                        else if(res.equals("1"))
+                        else if(res.equals("password is not right"))
                         {
                             Toast.makeText(LoginActivity.this,"password is not right",Toast.LENGTH_SHORT).show();
 //                            showWarnSweetDialog("password is not right");
@@ -177,6 +179,7 @@ public class LoginActivity extends Activity implements OnClickListener{
 //            }
 //        });
 //    }
+
     public static void  setLoggingStatus(Context context, boolean status)
     {
         SharedPreferences sharedPreferences = context.getSharedPreferences("userLogStatus", MODE_PRIVATE);

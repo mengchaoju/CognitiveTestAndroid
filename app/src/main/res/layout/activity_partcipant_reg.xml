@@ -19,11 +19,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/input_name"
+            <EditText android:id="@+id/pt_reg_input_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
-                android:hint="Username"
+                android:hint="Participant ID"
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/input_firstName"
+            <EditText android:id="@+id/pt_reg_input_firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/input_FamilyName"
+            <EditText android:id="@+id/pt_reg_input_FamilyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
@@ -62,7 +62,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:inputType="none">
-            <EditText android:id="@+id/input_DateofBirth"
+            <EditText android:id="@+id/pt_reg_input_DateofBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
@@ -76,46 +76,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/input_password"
+            <EditText android:id="@+id/pt_reg_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Password"
+                android:inputType="text"
+                android:hint="Gender"
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Confirm Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
-            <EditText android:id="@+id/input_conPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                android:hint="Confirm Password"
-                android:textSize="40dp"/>
-        </android.support.design.widget.TextInputLayout>
 
-        <!-- Signup Button -->
+        <!-- Start Button -->
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_signup"
+            android:id="@+id/btn_enter_test"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="80dp"
             android:layout_marginBottom="80dp"
             android:padding="30dp"
-            android:text="Create Account"
+            android:text="Start Test"
             android:textSize="30dp"/>
-
-        <TextView android:id="@+id/link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
-            android:text="Already a member? Login"
-            android:gravity="center"
-            android:textSize="30dip"/>
 
     </LinearLayout>
 </ScrollView>

@@ -28,4 +28,12 @@
     <string name="hint_login_loading">Logging in</string>
     <string name="hint_login_pwdEditField">Password</string>
     <string name="hint_login_usernameEditField">Username</string>
+
+    <string-array name="all_languages">
+        <item>Participant ID</item>
+        <item>Participant First Name</item>
+        <item>Participant Family Name</item>
+        <item>Participant Date of Birth</item>
+    </string-array>
+
 </resources>
