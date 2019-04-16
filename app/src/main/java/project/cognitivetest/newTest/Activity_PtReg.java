@@ -271,6 +271,7 @@ public class Activity_PtReg extends Activity {
     }
 
     private void gotoTrials() {
+        Log.d(TAG, "Navigate to trials, with participantID:"+participantID);
         Intent intent = new Intent(Activity_PtReg.this, IntroductionView.class);
         intent.putExtra("participantID", participantID);
         startActivity(intent);

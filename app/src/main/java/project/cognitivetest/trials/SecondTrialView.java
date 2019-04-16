@@ -23,6 +23,7 @@ import android.widget.Toast;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
 import serviceLayer.DataCache;
 import serviceLayer.Settings;
@@ -342,8 +343,8 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(String result) {
-//            Intent intent=new Intent(SecondTrialView.this, ContinuePage.class);
-//            startActivity(intent);
+            Intent intent=new Intent(SecondTrialView.this, HomeActivity.class);
+            startActivity(intent);
         }
 
         @Override

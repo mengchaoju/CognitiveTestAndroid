@@ -15,6 +15,7 @@ public class IntroductionView extends AppCompatActivity implements View.OnClickL
     private TextView text;
     private Button button1, button2;
     private TextToSpeech textToSpeech;
+    private String participantID;
     private String TAG = "Introduction";
 
     @Override
@@ -41,6 +42,9 @@ public class IntroductionView extends AppCompatActivity implements View.OnClickL
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
         text.setText(R.string.introduction_text);
+        // Get participant ID from last activity
+        Intent intent = getIntent();
+        participantID = intent.getStringExtra("participantID");
     }
 
     //Cases clicking on the buttons
@@ -67,6 +71,7 @@ public class IntroductionView extends AppCompatActivity implements View.OnClickL
     private void continue_btn() {
         Log.d(TAG, "click on continue button.");
         Intent intent=new Intent(IntroductionView.this, FirstTrialView.class);
+        intent.putExtra("participantID", participantID);
         startActivity(intent);
     }
 

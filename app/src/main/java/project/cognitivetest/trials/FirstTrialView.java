@@ -44,7 +44,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int ifMark = 0;  //0 means draw, 1 means correct(mark).
     //Indicating whether drawing activity is running or not, 1 = running.
     private int runningFlag = 0;
-    private String userName = "sampleUser";  // The username of this participant
+    private String participantID = "sampleUser";  // The username of this participant
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
@@ -232,7 +232,10 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         correctBtn.setOnClickListener(this);
 
         Log.d(TAG, "Activity view initialized.");
-        Log.d(TAG, "Participant username:"+userName);
+        //Receive participant ID from last activity.
+        Intent intent = getIntent();
+        participantID = intent.getStringExtra("participantID");
+        Log.d(TAG, "Participant username:"+participantID);
     }
 
     //Change the colour of painting if the function is enabled
@@ -314,7 +317,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
             String url = ServerIP.UPLOADCOPY;
-            uploadService = new UploadDataService(url, userName, data, data2);
+            uploadService = new UploadDataService(url, participantID, data, data2);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;
@@ -342,7 +345,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             // When finish uploading, goto next page.
             Intent intent=new Intent(FirstTrialView.this, ContinuePage.class);
             // Pass the username of participant to next activity.
-            intent.putExtra("p_username", userName);
+            intent.putExtra("p_username", participantID);
             startActivity(intent);
         }
 
