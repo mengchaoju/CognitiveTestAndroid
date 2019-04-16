@@ -31,6 +31,7 @@
 
     <string name="continue_text">Now please hand the tablet to the clinician.</string>
     <string name="introduction_text">This is an introduction.</string>
+    <string name="video_info_getData">Fetching data, please wait.</string>
 
     <string-array name="all_languages">
         <item>Participant ID</item>
@@ -39,4 +40,4 @@
         <item>Participant Date of Birth</item>
     </string-array>
 
-    </resources>
+</resources>
