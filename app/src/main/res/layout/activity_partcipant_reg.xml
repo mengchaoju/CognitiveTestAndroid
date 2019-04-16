@@ -36,7 +36,7 @@
             <EditText android:id="@+id/pt_reg_input_firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="textCapWords"
                 android:hint="Firstname"
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
@@ -50,7 +50,7 @@
             <EditText android:id="@+id/pt_reg_input_FamilyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="textCapWords"
                 android:hint="Familyname"
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
@@ -65,12 +65,12 @@
             <EditText android:id="@+id/pt_reg_input_DateofBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
+                android:inputType="time"
                 android:hint="Date of Birth"
                 android:textSize="40dp"/>
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Password Label -->
+        <!-- Gender Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -34,7 +34,8 @@ import project.cognitivetest.until.ServerIP;
 public class Activity_PtReg extends Activity {
     private static final String TAG = "ParticipantRegisterActivity";
 
-    @BindView(R.id.pt_id_text)
+
+    @BindView(R.id.pt_reg_input_id)
     EditText inputID;
     @BindView(R.id.pt_reg_input_firstName)
     EditText inputFirstName;
@@ -125,7 +126,7 @@ public class Activity_PtReg extends Activity {
 
         String url = ServerIP.PARTICIPANTSIGNUP;
         registeParticipantToServer(url,participantID,firstName,
-                familyName,gender,DOB);
+                familyName,DOB,gender);
 
         new android.os.Handler().postDelayed(new Runnable() {
             @Override
@@ -166,7 +167,7 @@ public class Activity_PtReg extends Activity {
         formBuilder.add("gender", gender);
         formBuilder.add("firstname",firstName);
         formBuilder.add("familyname",familyName);
-        formBuilder.add("dateofbirth",dateOfBirth);
+        formBuilder.add("dateofbirthr",dateOfBirth);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback()

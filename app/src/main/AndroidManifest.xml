@@ -27,6 +27,9 @@
         <activity
             android:name=".login.RegisterActivity"
             android:exported="false"></activity>
+        <activity android:name=".newTest.Activity_PtReg"></activity>
+        <activity android:name=".history.Activity_history"></activity>
+
     </application>
 
 </manifest>

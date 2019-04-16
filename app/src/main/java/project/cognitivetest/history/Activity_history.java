@@ -27,6 +27,7 @@ import okhttp3.Response;
 import project.cognitivetest.R;
 import project.cognitivetest.adapter.HistoryAdaptor;
 import project.cognitivetest.modules.ParticipantBean;
+import project.cognitivetest.until.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/15
@@ -87,6 +88,8 @@ public class Activity_history extends AppCompatActivity {
 
         }else {
             Log.d(TAG,"Searching for the text");
+            String url = ServerIP.QUERYPARTICIPANT;
+            getListFromServer(url,keyword);
 
         }
     }

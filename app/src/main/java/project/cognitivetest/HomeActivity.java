@@ -1,11 +1,14 @@
 package project.cognitivetest;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import project.cognitivetest.history.Activity_history;
+import project.cognitivetest.newTest.Activity_PtReg;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,6 +54,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void selectExisting() {
         //TODO
+        Intent intent = new Intent(HomeActivity.this,Activity_history.class);
+        startActivity(intent);
         Log.d(TAG, "click on select existing participant button");
     }
 
@@ -59,6 +64,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void createNew() {
         //TODO
+        Intent intent = new Intent(HomeActivity.this,Activity_PtReg.class);
+        intent.putExtra("staffUsername", staffUsername);
+        startActivity(intent);
+
         Log.d(TAG, "click on create a new participant button.");
     }
 }
