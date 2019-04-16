@@ -97,6 +97,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
                         if (seq ==1){
                             // Recording the time when pen down for the first time
                             timer.setTime(2);
+                            finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
                         }
                         Log.d(TAG, "drawing!");
                         startX = event.getX();
@@ -203,7 +204,6 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
     private void startDraw() {
         timer.setTime(1);  //record the start time
         startBtn.setVisibility(View.INVISIBLE);  //Hide the start button
-        finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
         sketchpad.setVisibility(View.VISIBLE);  //Enable the sketchpad
         new SaveData().execute("");
         this.runningFlag = 1;
@@ -237,7 +237,6 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         Log.d(TAG, "Activity view initialized.");
         Log.d(TAG, "Participant username:"+userName);
     }
-
 
     //Change the colour of painting if the function is enabled
     public void changeColor(View view) {
@@ -318,7 +317,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
             String url = ServerIP.UPLOADRECALL;
-//            uploadService = new UploadDataService(url, userName, data);
+            uploadService = new UploadDataService(url, userName, data, data2);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;

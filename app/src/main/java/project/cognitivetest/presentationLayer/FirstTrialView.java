@@ -97,6 +97,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
                         if (seq ==1){
                             // Recording the time when pen down for the first time
                             timer.setTime(2);
+                            finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
                         }
                         Log.d(TAG, "drawing!");
                         startX = event.getX();
@@ -203,7 +204,6 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private void startDraw() {
         timer.setTime(1);  //record the start time
         startBtn.setVisibility(View.INVISIBLE);  //Hide the start button
-        finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
         sketchpad.setVisibility(View.VISIBLE);  //Enable the sketchpad
         new SaveData().execute("");
         this.runningFlag = 1;
