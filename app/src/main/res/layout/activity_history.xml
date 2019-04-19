@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".history.activity_history">
+    tools:context=".history.Activity_history">
 
     <TextView
         android:id="@+id/heading_label"
@@ -25,15 +25,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="115dp"
-        android:id="@id/search_layout"
         android:layout_below="@id/heading_label"
+        android:id="@+id/history_hearder"
         android:paddingLeft="30dp"
         android:paddingTop="20dp"
         android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/history"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_below="@id/history_hearder"
+            android:layout_gravity="center_vertical"
+            />
+
         <EditText
             android:id="@+id/search_field"
-            android:layout_width="600dp"
+            android:layout_width="450dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/heading_label"
             android:layout_below="@+id/heading_label"
@@ -58,14 +68,21 @@
             android:layout_marginRight="30dp"
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_action_search"/>
+
     </LinearLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/result_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/search_layout"
-        android:layout_marginTop="10dp">
+        android:layout_below="@id/history_hearder"
+        android:layout_marginTop="30dp"
+        android:scrollbars="vertical">
+
     </android.support.v7.widget.RecyclerView>
+
+
+
 
 </RelativeLayout>

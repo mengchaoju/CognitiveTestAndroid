@@ -1,23 +1,25 @@
 package project.cognitivetest.modules;
 
-import java.util.ArrayList;
-
 /**
  * Created by 50650 on 2019/4/16
  */
-public class ParticipantBean {
-    public String resultcode;
-    public String error_code;
-    public String reason;
 
-    public ArrayList<participant> result;
-
-    public class participant{
+public class Participant{
         private String participantID;
         private String firstName;
         private String familyName;
         private String gender;
         private String dateOfBirth;
+
+        public Participant(String participantID, String firstName,
+                           String familyName, String gender,
+                           String dateOfBirth){
+            this.participantID=participantID;
+            this.firstName=firstName;
+            this.familyName=familyName;
+            this.gender=gender;
+            this.dateOfBirth=dateOfBirth;
+        }
 
 
         public String getParticipantID(){
@@ -49,7 +51,7 @@ public class ParticipantBean {
         }
 
         public String getGender() {
-            return gender;
+            return this.gender;
         }
 
         public String getDateOfBirth(){
@@ -71,47 +73,5 @@ public class ParticipantBean {
                     '}';
         }
 
-    }
 
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public void setError_code(String error_code) {
-        this.error_code = error_code;
-    }
-
-    public void setResult(ArrayList<participant> result) {
-        this.result = result;
-    }
-
-    public String getError_code() {
-        return error_code;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public String getResultcode() {
-        return resultcode;
-    }
-
-    public void setResultcode(String resultcode) {
-        this.resultcode = resultcode;
-    }
-
-    public ArrayList<participant> getResult() {
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "ParticipantBean{" +
-                "resultcode='" + resultcode + '\'' +
-                ", error_code='" + error_code + '\'' +
-                ", reason='" + reason + '\'' +
-                ", result=" + result +
-                '}';
-    }
 }

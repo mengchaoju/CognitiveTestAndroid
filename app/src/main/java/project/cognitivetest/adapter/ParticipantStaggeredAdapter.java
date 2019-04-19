@@ -12,19 +12,19 @@ import java.util.ArrayList;
 
 import project.cognitivetest.R;
 import project.cognitivetest.history.Activity_history;
-import project.cognitivetest.modules.ParticipantBean;
+import project.cognitivetest.modules.Participant;
 
 /**
  * Created by 50650 on 2019/4/16
  */
 public class ParticipantStaggeredAdapter extends RecyclerView.Adapter<ParticipantStaggeredAdapter.MyViewHolder> {
-    private final ArrayList<ParticipantBean.participant> mParticipants;
+    private final ArrayList<Participant> mParticipants;
     private final LayoutInflater mInflater;
     private final Activity_history mContent;
 
     private ArrayList<Integer> mHerghts;
 
-    public ParticipantStaggeredAdapter(ArrayList<ParticipantBean.participant> results,
+    public ParticipantStaggeredAdapter(ArrayList<Participant> results,
                                        Activity_history content){
         mParticipants=results;
         mContent =content;

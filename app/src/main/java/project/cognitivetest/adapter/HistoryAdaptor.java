@@ -5,14 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import project.cognitivetest.R;
 import project.cognitivetest.history.Activity_history;
-import project.cognitivetest.modules.ParticipantBean;
+import project.cognitivetest.modules.Participant;
 
 /**
  * Created by 50650 on 2019/4/15
@@ -20,12 +19,15 @@ import project.cognitivetest.modules.ParticipantBean;
 public class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.PtViewHolder> {
 
     private final Activity_history mCtx;
-    private ArrayList<ParticipantBean.participant> mParticipants;
+    private ArrayList<Participant> mParticipants;
     private final LayoutInflater mInflater;
 
     private ArrayList<Integer> mHeights;
 
-    public HistoryAdaptor(Activity_history content, ArrayList<ParticipantBean.participant> ptList){
+    private OnItemClickListener mOnItemClickListener;
+
+
+    public HistoryAdaptor(Activity_history content, ArrayList<Participant> ptList){
         mParticipants = ptList;
         mCtx = content;
         mInflater = LayoutInflater.from(mCtx);
@@ -39,17 +41,45 @@ public class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.PtViewHo
     }
 
     @Override
-    public void onBindViewHolder(PtViewHolder holder, int position) {
+    public void onBindViewHolder(final PtViewHolder holder, final int position) {
         holder.ptIDText.setText(mParticipants.get(position).getParticipantID());
         holder.ptNameText.setText(mParticipants.get(position).getFirstName()+" "+
                 mParticipants.get(position).getFamilyName());
+        String test = mParticipants.get(position).getGender();
         holder.ptGenderText.setText(mParticipants.get(position).getGender());
         holder.ptDoBText.setText(mParticipants.get(position).getDateOfBirth());
+
+        if (mOnItemClickListener != null){
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(holder.itemView,position);
+                }
+            });
+        }
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mOnItemClickListener.onItemLongClick(holder.itemView,position);
+                return false;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mParticipants.size();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.mOnItemClickListener = listener;
+    }
+
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 
     class PtViewHolder extends RecyclerView.ViewHolder{
@@ -63,10 +93,10 @@ public class HistoryAdaptor extends RecyclerView.Adapter<HistoryAdaptor.PtViewHo
         public PtViewHolder(View itemView) {
             super(itemView);
 
-            ptIDText = (EditText)itemView.findViewById(R.id.pt_id_text);
-            ptNameText =(EditText)itemView.findViewById(R.id.pt_name_text);
-            ptNameText = (EditText)itemView.findViewById(R.id.pt_gender_text);
-            ptDoBText =(EditText)itemView.findViewById(R.id.pt_dateofbirth_text);
+            ptIDText = (TextView)itemView.findViewById(R.id.pt_id_text);
+            ptNameText =(TextView)itemView.findViewById(R.id.pt_name_text);
+            ptGenderText = (TextView)itemView.findViewById(R.id.pt_gender_text);
+            ptDoBText =(TextView)itemView.findViewById(R.id.pt_dateofbirth_text);
 
         }
     }
