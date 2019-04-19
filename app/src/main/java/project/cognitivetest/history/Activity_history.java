@@ -53,6 +53,8 @@ public class Activity_history extends AppCompatActivity {
     private TextView headTitle;
     Spinner mSpinner;
 
+    private String staffID;
+
     private String mJson;
     private ArrayList<Participant> mResults = new ArrayList<Participant>();
 
@@ -69,6 +71,11 @@ public class Activity_history extends AppCompatActivity {
         headTitle = (TextView) findViewById(R.id.heading_label);
         mRecycleView = (RecyclerView)findViewById(R.id.result_list);
         mSpinner = (Spinner) findViewById(R.id.spinner);
+
+        Intent intent = getIntent();
+        staffID = intent.getStringExtra("staffID");
+
+        Log.d(TAG, "staff username: "+staffID);
 
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -303,19 +310,28 @@ public class Activity_history extends AppCompatActivity {
 
             public void onItemClick(View view, int position) {
 
-                String ParticipantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
+                String participantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
                         itemView.findViewById(R.id.pt_id_text)).getText().toString();
                 Intent intent = new Intent(Activity_history.this, VideoView.class);
-                intent.putExtra("participantID",ParticipantID);
-                Toast.makeText(Activity_history.this,ParticipantID,Toast.LENGTH_SHORT).show();
-
+                Bundle bundle = new Bundle();
+                bundle.putString("staffID",staffID);
+                bundle.putString("participantID",participantID);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                Toast.makeText(Activity_history.this,participantID,Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onItemLongClick(View view, int position) {
-                String ParticipantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
+                String participantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
                         itemView.findViewById(R.id.pt_id_text)).getText().toString();
-                Toast.makeText(Activity_history.this,ParticipantID,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Activity_history.this, VideoView.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("staffID",staffID);
+                bundle.putString("participantID",participantID);
+                intent.putExtra("data",bundle);
+                startActivity(intent);
+                Toast.makeText(Activity_history.this,participantID,Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -217,7 +217,6 @@ public class Activity_PtReg extends Activity {
                 });
             }
         });
-
     }
 
     public boolean validate() {

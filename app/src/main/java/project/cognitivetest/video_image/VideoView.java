@@ -1,5 +1,6 @@
 package project.cognitivetest.video_image;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -41,11 +42,12 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private VideoService videoService;
     private ServerIP serverIP;
 
+    private String participantID;
+
     private String pixelData;
     private float startX;
     private float startY;
     private int seq = 0;  //The sequence number of line currently drawn
-    private String participantID = "abc";
     private int isResponse = 0;  // Indicating whether the server respond or not. 0 means no response yet
     private int isPause = 0;  //Indicate whether the video is paused
     private int trialCode = 0;  // 0 means copy trial, 1 means recall trial
@@ -95,6 +97,16 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         retry.setOnClickListener(this);
 
         new FetchData().execute("");
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("data");
+        this.userName = bundle.getString("staffID");
+        this.participantID = bundle.getString("participantID");
+
+        Log.d(TAG,"get staffID: "+userName);
+        Log.d(TAG,"get participantID"+participantID);
+
+
     }
 
     /**
