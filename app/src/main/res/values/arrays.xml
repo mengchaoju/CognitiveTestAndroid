@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="history">
+        <item>All</item>
+        <item>ID</item>
+        <item>FirstName</item>
+        <item>FamilyName</item>
+        <item>DoB</item>
+    </string-array>
+</resources>

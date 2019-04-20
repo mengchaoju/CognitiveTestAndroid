@@ -44,6 +44,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
     private String pixelData, pixelData2;  // pixelData is copy trial data,
                                             // pixelData2 is recall trial data
+    private String participantID;
     private float startX;
     private float startY;
     private int seq = 0;  //The sequence number of line currently drawn
@@ -52,7 +53,6 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private int trialCode = 0;  // 0 means copy trial, 1 means recall trial
     private ArrayList<Long> timeLine, timeLine2;
     private int totalPoints, totalPoints2;
-    private String participantID = "sampleUser";
     private final String TAG = "VideoView";
 
     @Override
@@ -103,6 +103,13 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         }
 
         new FetchData().execute("");
+
+        Bundle bundle = intent.getBundleExtra("data");
+        this.participantID = bundle.getString("participantID");
+
+        Log.d(TAG,"get participantID"+participantID);
+
+
     }
 
     /**

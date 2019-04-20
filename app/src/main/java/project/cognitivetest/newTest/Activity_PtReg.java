@@ -121,15 +121,15 @@ public class Activity_PtReg extends Activity {
         progressDialog.setMessage("Creating Participant...");
         progressDialog.show();
 
-        String participantID = inputID.getText().toString();
-        this.participantID = participantID;  // Update global variable
+        String participantsID = inputID.getText().toString();
+        this.participantID = participantsID;  // Update global variable
         String firstName = inputFirstName.getText().toString();
         String familyName = inputFamilyName.getText().toString();
         String gender = inputGender.getText().toString();
         String DOB = inputDoB.getText().toString();
 
         String url = ServerIP.PARTICIPANTSIGNUP;
-        registerParticipantToServer(url,participantID,firstName,
+        registerParticipantToServer(url,participantsID,firstName,
                 familyName,DOB,gender);
 
         new android.os.Handler().postDelayed(new Runnable() {
@@ -158,22 +158,22 @@ public class Activity_PtReg extends Activity {
     }
 
     private void registerParticipantToServer(String url,
-                                         final String participantID,
+                                         final String participantsID,
                                          String firstName,
                                          String familyName,
                                          String dateOfBirth,
                                          String gender)
     {
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client1 = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("participantid", participantID);
-        formBuilder.add("gender", gender);
+        formBuilder.add("participantid", participantsID);
         formBuilder.add("firstname",firstName);
         formBuilder.add("familyname",familyName);
+        formBuilder.add("gender", gender);
         formBuilder.add("dateofbirth",dateOfBirth);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback()
+        Call call1 = client1.newCall(request);
+        call1.enqueue(new Callback()
         {
             @Override
             public void onFailure(Call call, IOException e)
@@ -205,6 +205,7 @@ public class Activity_PtReg extends Activity {
                         }
                         else
                         {
+                            Toast.makeText(Activity_PtReg.this,res,Toast.LENGTH_LONG).show();
                             gotoTrials();
                             //                            sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
                             //                            SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -216,7 +217,6 @@ public class Activity_PtReg extends Activity {
                 });
             }
         });
-
     }
 
     public boolean validate() {
@@ -264,9 +264,6 @@ public class Activity_PtReg extends Activity {
         } else {
             inputDoB.setError(null);
         }
-
-
-
         return valid;
     }
 
@@ -276,6 +273,4 @@ public class Activity_PtReg extends Activity {
         intent.putExtra("participantID", participantID);
         startActivity(intent);
     }
-
-
 }
