@@ -55,7 +55,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private void selectExisting() {
         //TODO
         Intent intent = new Intent(HomeActivity.this,Activity_history.class);
-        intent.putExtra("staffID",staffUsername);
         startActivity(intent);
         Log.d(TAG, "click on select existing participant button");
     }

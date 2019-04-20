@@ -100,7 +100,6 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("data");
-        this.userName = bundle.getString("staffID");
         this.participantID = bundle.getString("participantID");
 
         Log.d(TAG,"get staffID: "+userName);

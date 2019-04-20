@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,8 +52,6 @@ public class Activity_history extends AppCompatActivity {
     private TextView headTitle;
     Spinner mSpinner;
 
-    private String staffID;
-
     private String mJson;
     private ArrayList<Participant> mResults = new ArrayList<Participant>();
 
@@ -73,9 +70,6 @@ public class Activity_history extends AppCompatActivity {
         mSpinner = (Spinner) findViewById(R.id.spinner);
 
         Intent intent = getIntent();
-        staffID = intent.getStringExtra("staffID");
-
-        Log.d(TAG, "staff username: "+staffID);
 
         mRecycleView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -312,11 +306,10 @@ public class Activity_history extends AppCompatActivity {
 
                 String participantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
                         itemView.findViewById(R.id.pt_id_text)).getText().toString();
-                Intent intent = new Intent(Activity_history.this, VideoView.class);
+                Intent intent = new Intent(Activity_history.this, project.cognitivetest.video_image.VideoView.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("staffID",staffID);
                 bundle.putString("participantID",participantID);
-                intent.putExtras(bundle);
+                intent.putExtra("data",bundle);
                 startActivity(intent);
                 Toast.makeText(Activity_history.this,participantID,Toast.LENGTH_SHORT).show();
             }
@@ -325,9 +318,8 @@ public class Activity_history extends AppCompatActivity {
             public void onItemLongClick(View view, int position) {
                 String participantID = ((TextView) mRecycleView.findViewHolderForAdapterPosition(position).
                         itemView.findViewById(R.id.pt_id_text)).getText().toString();
-                Intent intent = new Intent(Activity_history.this, VideoView.class);
+                Intent intent = new Intent(Activity_history.this, project.cognitivetest.video_image.VideoView.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("staffID",staffID);
                 bundle.putString("participantID",participantID);
                 intent.putExtra("data",bundle);
                 startActivity(intent);
