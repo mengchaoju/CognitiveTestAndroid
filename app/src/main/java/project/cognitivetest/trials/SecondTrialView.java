@@ -11,8 +11,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
-import project.cognitivetest.video_image.VideoView;
 import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
@@ -345,7 +344,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(String result) {
             // When finishing data transmission, go to home activity
-            Intent intent=new Intent(SecondTrialView.this, VideoView.class);
+            Intent intent=new Intent(SecondTrialView.this, HomeActivity.class);
             //TESTING....
             intent.putExtra("participantID",participantID );
             Log.d(TAG, "Starting homeActivity.");

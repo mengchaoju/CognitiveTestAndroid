@@ -231,7 +231,7 @@ public class Activity_history extends AppCompatActivity {
                     @Override
                     public void run()
                     {
-                        if (res.equals("no record"))
+                        if (res.equals("No record"))
                         {
                             headTitle.setText("No record");
                             Toast.makeText(Activity_history.this,"Nothing is found in the database",Toast.LENGTH_SHORT).show();

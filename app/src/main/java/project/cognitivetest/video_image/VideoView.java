@@ -96,26 +96,18 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         retry.setOnClickListener(this);
 
         Intent intent = getIntent();
-        try {
-            participantID = intent.getStringExtra("participantID");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        new FetchData().execute("");
-
         Bundle bundle = intent.getBundleExtra("data");
         this.participantID = bundle.getString("participantID");
 
         Log.d(TAG,"get participantID"+participantID);
-
-
+        new FetchData().execute("");
     }
 
     /**
      * The listener for the buttons.
      * @param view
      */
+
     public void onClick(View view) {
         switch (view.getId()) {
             case(R.id.play_button):
@@ -458,6 +450,5 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         });
 
     }
-
 
 }
