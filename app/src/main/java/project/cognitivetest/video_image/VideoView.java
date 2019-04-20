@@ -219,9 +219,17 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         video.setImageBitmap(copyBitmap);
         Log.d(TAG, "ImageView initialised!");
         finish.setVisibility(View.VISIBLE);
-        for (int i=0;i<totalPoints;i++) {
-            playVideo();
+        if (trialCode == 0) {  // For copy trial
+            Log.d(TAG, "copy trial!");
+            for (int i=0;i<totalPoints;i++) {
+                playVideo();
+            }
+        } else {
+            for (int i=0;i<totalPoints2;i++) {
+                playVideo();
+            }
         }
+
     }
 
     /**
@@ -249,7 +257,6 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
      */
     private void playVideo() {
         if (trialCode == 0) {
-            Log.d(TAG, "copy trial!");
             if (videoService.getSeq()!=seq) {
                 seq = videoService.getSeq();
                 startX =videoService.getNextX();
