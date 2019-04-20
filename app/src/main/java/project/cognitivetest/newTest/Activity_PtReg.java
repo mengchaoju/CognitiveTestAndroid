@@ -170,7 +170,7 @@ public class Activity_PtReg extends Activity {
         formBuilder.add("gender", gender);
         formBuilder.add("firstname",firstName);
         formBuilder.add("familyname",familyName);
-        formBuilder.add("dateofbirthr",dateOfBirth);
+        formBuilder.add("dateofbirth",dateOfBirth);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback()

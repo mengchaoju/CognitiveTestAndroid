@@ -4,7 +4,7 @@ public class Settings {
 
     private int strokeWidth = 12;
     private int markPenWidth = 32;
-    private int timeBetween2Trials = 20;  //180 seconds = 3 minutes
+    private int timeBetween2Trials = 5;  //180 seconds = 3 minutes
     //The pen colours
     private int startColour = 0xff0000;
     private int endColour = 0xff9900;

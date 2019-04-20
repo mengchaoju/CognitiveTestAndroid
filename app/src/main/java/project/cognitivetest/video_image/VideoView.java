@@ -1,5 +1,6 @@
 package project.cognitivetest.video_image;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -38,20 +39,20 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private Paint paint;
     private Canvas canvas;
     private Settings settings;
-    private VideoService videoService;
+    private VideoService videoService, videoService2;
     private ServerIP serverIP;
 
-    private String pixelData;
+    private String pixelData, pixelData2;  // pixelData is copy trial data,
+                                            // pixelData2 is recall trial data
     private float startX;
     private float startY;
     private int seq = 0;  //The sequence number of line currently drawn
-    private String participantID = "abc";
     private int isResponse = 0;  // Indicating whether the server respond or not. 0 means no response yet
     private int isPause = 0;  //Indicate whether the video is paused
     private int trialCode = 0;  // 0 means copy trial, 1 means recall trial
-    private ArrayList<Long> timeLine;
-    private int totalPoints;
-    private String userName = "sampleUser";
+    private ArrayList<Long> timeLine, timeLine2;
+    private int totalPoints, totalPoints2;
+    private String participantID = "sampleUser";
     private final String TAG = "VideoView";
 
     @Override
@@ -93,6 +94,13 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         image2.setOnClickListener(this);
         finish.setOnClickListener(this);
         retry.setOnClickListener(this);
+
+        Intent intent = getIntent();
+        try {
+            participantID = intent.getStringExtra("participantID");
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         new FetchData().execute("");
     }
@@ -224,6 +232,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         finish.setVisibility(View.INVISIBLE);
         seq = 0;  // Reset the counter.
         videoService.resetSequence();
+        videoService2.resetSequence();
         copyBitmap.recycle();
         paint.reset();
     }
@@ -232,22 +241,44 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
      * This function deals with drawing all the pixels on the screen.
      */
     private void playVideo() {
-        if (videoService.getSeq()!=seq) {
-            seq = videoService.getSeq();
-            startX =videoService.getNextX();
-            startY = videoService.getNextY();
-            canvas.drawPoint(startX, startY, paint);
-            video.setImageBitmap(copyBitmap);
-            videoService.increaseSeq();
+        if (trialCode == 0) {
+            Log.d(TAG, "copy trial!");
+            if (videoService.getSeq()!=seq) {
+                seq = videoService.getSeq();
+                startX =videoService.getNextX();
+                startY = videoService.getNextY();
+                canvas.drawPoint(startX, startY, paint);
+                video.setImageBitmap(copyBitmap);
+                videoService.increaseSeq();
+            } else {
+                float curX = videoService.getNextX();
+                float curY = videoService.getNextY();
+                canvas.drawLine(startX, startY, curX, curY, paint);
+                startX = curX;
+                startY = curY;
+                video.setImageBitmap(copyBitmap);
+                videoService.increaseSeq();
+            }
         } else {
-            float curX = videoService.getNextX();
-            float curY = videoService.getNextY();
-            canvas.drawLine(startX, startY, curX, curY, paint);
-            startX = curX;
-            startY = curY;
-            video.setImageBitmap(copyBitmap);
-            videoService.increaseSeq();
+            Log.d(TAG, "recall trial!");
+            if (videoService2.getSeq()!=seq) {
+                seq = videoService2.getSeq();
+                startX =videoService2.getNextX();
+                startY = videoService2.getNextY();
+                canvas.drawPoint(startX, startY, paint);
+                video.setImageBitmap(copyBitmap);
+                videoService2.increaseSeq();
+            } else {
+                float curX = videoService2.getNextX();
+                float curY = videoService2.getNextY();
+                canvas.drawLine(startX, startY, curX, curY, paint);
+                startX = curX;
+                startY = curY;
+                video.setImageBitmap(copyBitmap);
+                videoService2.increaseSeq();
+            }
         }
+
     }
 
     /**
@@ -257,7 +288,8 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         String url = serverIP.TRIALSDATAURL;
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("username", userName);
+        Log.d(TAG, "participantID:"+participantID);
+        formBuilder.add("username", participantID);
         Request request1 = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request1);
         call.enqueue(new Callback()
@@ -281,20 +313,18 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             {
                 try {
                     String resp = response.body().string();  //The response from server
-                                                                   // 1 means success, 0 means failure.
-//                    switch (resp) {
-//                        case ("0"):
-//                            break;
-//                        case ("1"):
-//                            requestPixelData();
-//                            break;
-//                    }
+                    // Containing pixel data of both trials, separated by |
                     Log.d(TAG, "Server response:"+resp);
-                    pixelData = resp;
-                    Log.d(TAG, "pixel data:"+pixelData);
+                    String[] dataSet = resp.split("&");
+                    pixelData = dataSet[0];
+                    Log.d(TAG, "copyPixels:"+pixelData);
+                    pixelData2 = dataSet[1];
                     videoService = new VideoService(pixelData);
+                    videoService2 = new VideoService(pixelData2);
                     totalPoints = videoService.getTotalPoints();
+                    totalPoints2 = videoService2.getTotalPoints();
                     timeLine = videoService.getTimeline();
+                    timeLine2 = videoService2.getTimeline();
                     isResponse = 1;
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -351,23 +381,44 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         @Override
         protected String doInBackground(String... params) {
             Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
-            int i =0;  //The counter
-            while (true) {
-                if (i == totalPoints) {
-                    break;
-                } else if (isPause!=1) {
-                    try {
-                        Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
-                        Thread.sleep(timeLine.get(i));
-                        playVideo();
-                        Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
-                        i++;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        Log.d(TAG, "thread ended unexpected!");
+            if (trialCode == 0) {
+                // Copy trial
+                int i =0;  //The counter
+                while (true) {
+                    if (i == totalPoints) {
+                        break;
+                    } else if (isPause!=1) {
+                        try {
+                            Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
+                            Thread.sleep(timeLine.get(i));
+                            playVideo();
+                            Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
+                            i++;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "thread ended unexpected!");
+                        }
                     }
-                }
-            }  //When finish playing, show finish button on the screen.
+                }  //When finish playing, show finish button on the screen.
+            } else {
+                // Recall trial
+                int i =0;  //The counter
+                while (true) {
+                    if (i == totalPoints2) {
+                        break;
+                    } else if (isPause!=1) {
+                        try {
+                            Thread.sleep(timeLine2.get(i));
+                            playVideo();
+                            i++;
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                            Log.d(TAG, "thread ended unexpected!");
+                        }
+                    }
+                }  //When finish playing, show finish button on the screen.
+            }
+
             return "Executed";
         }
 

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
+import project.cognitivetest.video_image.VideoView;
 import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
@@ -45,7 +46,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
     private int ifMark = 0;  //0 means draw, 1 means correct(mark).
     //Indicating whether drawing activity is running or not, 1 = running.
     private int runningFlag = 0;
-    private String userName;  // The username of this participant
+    private String participantID;  // The username of this participant
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
@@ -234,9 +235,9 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
 
         // Get username from previous activity
         Intent intent = getIntent();
-        userName = intent.getStringExtra("p_username");
+        participantID = intent.getStringExtra("p_username");
         Log.d(TAG, "Activity view initialized.");
-        Log.d(TAG, "Participant username:"+userName);
+        Log.d(TAG, "Participant username:"+participantID);
     }
 
     //Change the colour of painting if the function is enabled
@@ -318,7 +319,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
             String data = dataConstructor();  // The pixel data
             String data2 = dataConstructor2();  // The time line data
             String url = ServerIP.UPLOADRECALL;
-            uploadService = new UploadDataService(url, userName, data, data2);
+            uploadService = new UploadDataService(url, participantID, data, data2);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;
@@ -343,7 +344,11 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(String result) {
-            Intent intent=new Intent(SecondTrialView.this, HomeActivity.class);
+            // When finishing data transmission, go to home activity
+            Intent intent=new Intent(SecondTrialView.this, VideoView.class);
+            //TESTING....
+            intent.putExtra("participantID",participantID );
+            Log.d(TAG, "Starting homeActivity.");
             startActivity(intent);
         }
 
