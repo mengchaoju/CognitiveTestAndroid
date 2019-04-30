@@ -13,7 +13,7 @@ import project.cognitivetest.newTest.Activity_PtReg;
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btn1, btn2;
-    private String staffUsername;
+    private String staffID;
     private String TAG = "HomeActivity";
 
     @Override
@@ -33,9 +33,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
         // Get staff username from the last activity.
         Intent intent = getIntent();
-        staffUsername = intent.getStringExtra("staffUsername");
+        staffID = intent.getStringExtra("staffID");
         Log.d(TAG, "homeActivity view initialized.");
-        Log.d(TAG, "staff username: "+staffUsername);
+        Log.d(TAG, "staff username: "+staffID);
     }
 
     public void onClick(View view) {
@@ -63,9 +63,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
      * Dealing with clicking on "create a new participant button."
      */
     private void createNew() {
-        //TODO
         Intent intent = new Intent(HomeActivity.this,Activity_PtReg.class);
-        intent.putExtra("staffUsername", staffUsername);
+        intent.putExtra("staffID", staffID);
         startActivity(intent);
 
         Log.d(TAG, "click on create a new participant button.");

@@ -345,7 +345,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(String result) {
             // When finishing data transmission, go to home activity
-            Intent intent=new Intent(SecondTrialView.this, VideoView.class);
+            Intent intent=new Intent(SecondTrialView.this, HomeActivity.class);
             //TESTING....
             intent.putExtra("participantID",participantID );
             Log.d(TAG, "Starting homeActivity.");

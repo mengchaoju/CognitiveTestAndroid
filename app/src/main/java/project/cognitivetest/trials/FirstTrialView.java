@@ -48,7 +48,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private Timer timer;
     private DataCache dataCache;
     private Settings settings;
-    private UploadDataService uploadService, uploadService2;
+    private UploadDataService uploadService;
 
     // The available colours
     private int startColour;
@@ -58,6 +58,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
     private int colourFlag2 = 0;
     private int enableColour;
 
+    private String staffID;
     private String TAG = "FirstTrial";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -235,7 +236,9 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         //Receive participant ID from last activity.
         Intent intent = getIntent();
         participantID = intent.getStringExtra("participantID");
+        staffID = intent.getStringExtra("staffID");
         Log.d(TAG, "Participant username:"+participantID);
+        Log.d(TAG, "StaffID:"+staffID);
     }
 
     //Change the colour of painting if the function is enabled
@@ -318,6 +321,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             String data2 = dataConstructor2();  // The time line data
             String url = ServerIP.UPLOADCOPY;
             uploadService = new UploadDataService(url, participantID, data, data2);
+            uploadService.setStaffID(staffID);
             uploadService.send();
             // Check the state of uploading service, if server fails, retry sending
             int counter = 1;

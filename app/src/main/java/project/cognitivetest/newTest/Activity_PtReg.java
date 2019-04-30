@@ -34,7 +34,7 @@ import serviceLayer.util.ServerIP;
  * Created by 50650 on 2019/4/16
  */
 public class Activity_PtReg extends Activity {
-    private String participantID;
+    private String participantID, staffID;
     private static final String TAG = "ParticipantRegisterActivity";
 
 
@@ -58,6 +58,8 @@ public class Activity_PtReg extends Activity {
         setContentView(R.layout.activity_partcipant_reg);
         ButterKnife.bind(this);
 
+        Intent intent = getIntent();
+        this.staffID = intent.getStringExtra("staffID");
         initDatePicker();
 
         btnStartTest.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +273,8 @@ public class Activity_PtReg extends Activity {
         Log.d(TAG, "Navigate to trials, with participantID:"+participantID);
         Intent intent = new Intent(Activity_PtReg.this, IntroductionView.class);
         intent.putExtra("participantID", participantID);
+        Log.d(TAG, "staffID:"+staffID);
+        intent.putExtra("staffID", staffID);
         startActivity(intent);
     }
 }
