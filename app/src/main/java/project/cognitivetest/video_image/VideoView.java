@@ -397,6 +397,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                         Toast.makeText(VideoView.this,"Server failure.", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         } catch (IOException e) {
             e.printStackTrace();
