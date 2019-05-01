@@ -13,7 +13,8 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
         android:layout_centerVertical="true"
-        android:foregroundGravity="center"/>
+        android:foregroundGravity="center"
+        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/homepage_button1"
@@ -24,13 +25,15 @@
         android:singleLine="true"
         android:gravity="center"
         android:layout_marginLeft="80dp"
-        android:text="Select an existing participant" />
+        android:text="Select an existing participant"
+        android:layout_gravity="center_horizontal"/>
 
     <Button
         android:id="@+id/homepage_button2"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/homepage_divider"
+        android:layout_gravity="fill_horizontal"
         android:layout_marginBottom="-60dp"
         android:singleLine="true"
         android:text="Register a new participant" />

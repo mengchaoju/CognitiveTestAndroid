@@ -29,7 +29,7 @@
         </activity>
 
         <activity android:name=".video_image.VideoView"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
         <activity
@@ -42,8 +42,7 @@
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
-        <activity android:name=".history.Activity_history"
-            android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".history.Activity_history">
         </activity>
 
         <activity android:name=".trials.IntroductionView"

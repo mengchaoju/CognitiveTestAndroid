@@ -10,19 +10,20 @@
     android:layout_marginTop="15dp"
     android:layout_marginBottom="15dp"
     android:visibility="visible"
-    android:background="@drawable/cardview_item">
+    android:orientation="horizontal">
 
     <!--android:foreground="@drawable/cardview_item"-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:accessibilityTraversalAfter="@+id/pt_id_text"
         android:accessibilityTraversalBefore="@+id/pt_id_text"
         android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:background="@drawable/frame_history_result">
 
         <TextView
             android:id="@+id/pt_id_text"
@@ -30,13 +31,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
             android:elevation="4dp"
             android:text="Participant ID"
             android:textColor="#000000"
-            android:textSize="32sp"
+            android:textSize="15dp"
             android:visibility="visible" />
 
         <TextView
@@ -44,12 +46,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/pt_id_text"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="30dp"
-            android:text="Participant Name"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="10dp"
+            android:text="Name"
             android:textColor="#000000"
-            android:textSize="28sp"
+            android:textSize="15dp"
             android:visibility="visible" />
 
         <TextView
@@ -57,27 +60,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/pt_name_text"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:text="Gender"
             android:textColor="#000000"
-            android:textSize="28sp"
+            android:textSize="15dp"
             android:visibility="visible" />
 
         <TextView
             android:id="@+id/pt_dateofbirth_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/pt_name_text"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="30dp"
-            android:text="Participant Date of Birth"
+            android:layout_toRightOf="@+id/pt_gender_text"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="15dp"
+            android:text="Date of Birth"
             android:textColor="#000000"
-            android:textSize="28sp"
+            android:textSize="15dp"
             android:visibility="visible"
-            tools:text="dssa" />
+            tools:text="DoB" />
     </RelativeLayout>
 
 
