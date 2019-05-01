@@ -20,9 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -292,73 +289,8 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     }
 
     /**
-     * Request pixel data from server using okHttp POST() function
+     * Request pixel data from server using okHttp GET() function
      */
-    private void getDataFromServer1() {
-        String url = serverIP.TRIALSDATAURL;
-        OkHttpClient client = new OkHttpClient.Builder()
-                .retryOnConnectionFailure(true)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .build();
-        FormBody.Builder formBuilder = new FormBody.Builder();
-        Log.d(TAG, "participantID:"+participantID);
-        formBuilder.add("username", participantID);
-        final Request request = new Request.Builder()
-                .url(url).post(formBuilder.build())
-                .header("Connection", "close")
-//                .header("Vary", "Accept-Encoding")
-//                .header("Transfer-Encoding", "chunked")
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(Call call, IOException e)
-            {
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Toast.makeText(VideoView.this,"Server failure.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
-                try {
-//                    Log.d(TAG, "res length:"+response.body().contentLength());
-                    String resp = response.body().string();  //The response from server
-                    // Containing pixel data of both trials, separated by |
-                    Log.d(TAG, "Server response:"+resp);
-                    String[] dataSet = resp.split("&");
-                    pixelData = dataSet[0];
-                    Log.d(TAG, "copyPixels:"+pixelData);
-                    pixelData2 = dataSet[1];
-                    videoService = new VideoService(pixelData);
-                    videoService2 = new VideoService(pixelData2);
-                    totalPoints = videoService.getTotalPoints();
-                    totalPoints2 = videoService2.getTotalPoints();
-                    timeLine = videoService.getTimeline();
-                    timeLine2 = videoService2.getTimeline();
-                    isResponse = 1;
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        while(true) {
-            if (isResponse == 1) {
-                retry.setVisibility(View.INVISIBLE);
-                break;
-            }
-        }
-    }
-
     private void getDataFromServer() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
@@ -367,13 +299,13 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         Request request = new Request
                 .Builder()
                 .url(serverIP.TRIALSDATAURL+"?"+participantID)
-//                .header("Connection", "close")
                 .header("Vary", "Accept-Encoding")
                 .header("Transfer-Encoding", "chunked")
                 .build();
         Response response = null;
         try{
             response = client.newCall(request).execute();
+            Thread.sleep(5000);  //Wait for getting response
             if (response.code() == 200) {
                 String resp = response.body().string();
                 Log.d(TAG, "receive from server:"+resp);
@@ -400,6 +332,8 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
             }
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             if (response != null) {
