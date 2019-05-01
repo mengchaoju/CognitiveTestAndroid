@@ -17,7 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
         <activity android:name=".login.LoginActivity"
             android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
@@ -29,7 +31,7 @@
         </activity>
 
         <activity android:name=".video_image.VideoView"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
         <activity
@@ -47,15 +49,15 @@
         </activity>
 
         <activity android:name=".trials.IntroductionView"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
         <activity android:name=".trials.SecondTrialView"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".trials.ContinuePage"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".trials.FirstTrialView"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

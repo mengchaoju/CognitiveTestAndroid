@@ -9,7 +9,7 @@
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
     <string name="hint_login_username">username</string>
     <string name="hint_login_pwd">password</string>
     <string name="loginbtntext">LOGIN</string>
@@ -17,8 +17,6 @@
     <string name="loading">Loading...</string>
     <string name="error_field_required">This field is required</string>
 
-
-    </string>
     <string name="hint_login_btn">LOGIN</string>
     <string name="hint_login_reg">Register as a clinician</string>
     <string name="hint_login_remPWD">  Remember Password</string>
@@ -32,6 +30,13 @@
     <string name="continue_text">Now please hand the tablet to the clinician.</string>
     <string name="introduction_text">This is an introduction.</string>
     <string name="video_info_getData">Fetching data, please wait.</string>
+    <string name="home_select_existing">HISTORY</string>
+    <string name="home_create_new">NEW PARTICIPANT</string>
+    <string name="home_title">Dashboard</string>
+    <string name="intro_title">Introduction</string>
+    <string name="intro_continue">CONTINUE</string>
+    <string name="intro_read">READ</string>
+
 
     <string-array name="all_languages">
         <item>Participant ID</item>

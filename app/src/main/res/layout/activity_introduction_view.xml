@@ -24,7 +24,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="8dp"
         android:layout_alignParentTop="true"
-        android:text="Read" />
+        android:text="@string/intro_read" />
 
     <Button
         android:id="@+id/continue_button"
@@ -33,5 +33,16 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="8dp"
         android:layout_alignParentBottom="true"
-        android:text="Continue" />
+        android:text="@string/intro_continue" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textSize="32sp"
+        android:textStyle="bold|italic"
+        android:typeface="sans"
+        android:layout_marginTop="80dp"
+        android:text="@string/intro_title" />
 </RelativeLayout>
