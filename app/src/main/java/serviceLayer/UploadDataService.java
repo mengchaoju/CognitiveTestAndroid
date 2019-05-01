@@ -14,6 +14,7 @@ public class UploadDataService {
     private int ifSuccess = 0;  // 0 means fail, 1 means success.
     private String url;
     private String userName;
+    private String staffID = "";
     private String data1, data2;
 
     /**
@@ -30,6 +31,10 @@ public class UploadDataService {
         this.data2 = data2;
     }
 
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
+    }
+
     public int getIfSuccess() {
         return this.ifSuccess;
     }
@@ -38,6 +43,9 @@ public class UploadDataService {
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
         formBuilder.add("username", userName);
+        if (!staffID.equals("")) {
+            formBuilder.add("staffID", staffID);
+        }
         formBuilder.add("pixelData", data1);
         formBuilder.add("timeData", data2);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();

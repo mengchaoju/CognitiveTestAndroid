@@ -161,7 +161,7 @@ public class LoginActivity extends Activity implements OnClickListener{
      */
     private void goToHomePage() {
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-        intent.putExtra("staffUsername", username);  // This is the username of staff
+        intent.putExtra("staffID", username);  // This is the username of staff
         startActivity(intent);
     }
 
