@@ -64,7 +64,6 @@ public class Activity_history extends AppCompatActivity {
         hideSoftKeyboard();
 
         setContentView(R.layout.activity_history);
-        getSupportActionBar().hide();
 
         searchBTN= (ImageButton) findViewById(R.id.search_btn);
         editTextString=(EditText) findViewById(R.id.search_field);
