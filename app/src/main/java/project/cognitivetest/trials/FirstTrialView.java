@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -156,6 +157,17 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             default:
                 break;
         }
+    }
+
+    /**
+     * Disable "back" key on the tablet
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return false;
     }
 
     /**
