@@ -359,10 +359,9 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     }
 
     private void getDataFromServer() {
-//        OkHttpClient client = new OkHttpClient();
         OkHttpClient client = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)
-                .connectTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(100, TimeUnit.SECONDS)
                 .build();
         Request request = new Request
                 .Builder()

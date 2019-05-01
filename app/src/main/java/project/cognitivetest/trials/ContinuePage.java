@@ -9,6 +9,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -40,6 +41,17 @@ public class ContinuePage extends AppCompatActivity {
         });
 
         new ContinuePage.LongOperation().execute("");
+    }
+
+    /**
+     * Disable "back" key on the tablet
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return false;
     }
 
     /**
