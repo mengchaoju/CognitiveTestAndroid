@@ -39,10 +39,11 @@
         </activity>
 
         <activity android:name=".newTest.Activity_PtReg"
-            android:theme="@android:style/Theme.NoTitleBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
-        <activity android:name=".history.Activity_history">
+        <activity android:name=".history.Activity_history"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
         <activity android:name=".trials.IntroductionView"
@@ -51,10 +52,13 @@
 
         <activity android:name=".trials.SecondTrialView"
             android:theme="@android:style/Theme.NoTitleBar"/>
+
         <activity android:name=".trials.ContinuePage"
             android:theme="@android:style/Theme.NoTitleBar"/>
+
         <activity android:name=".trials.FirstTrialView"
             android:theme="@android:style/Theme.NoTitleBar"/>
+
     </application>
 
 </manifest>
