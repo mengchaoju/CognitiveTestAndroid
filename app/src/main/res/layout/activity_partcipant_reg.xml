@@ -9,79 +9,79 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="100dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp">
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="30dp">
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/pt_reg_input_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Participant ID"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Firstname Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/pt_reg_input_firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Firstname"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Lastname Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/pt_reg_input_FamilyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Familyname"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Date of Birth Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:inputType="none">
             <EditText android:id="@+id/pt_reg_input_DateofBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="time"
                 android:hint="Date of Birth"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Gender Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/pt_reg_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:hint="Gender"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
 
@@ -90,11 +90,11 @@
             android:id="@+id/btn_enter_test"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="80dp"
-            android:padding="30dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="40dp"
+            android:padding="10dp"
             android:text="Start Test"
-            android:textSize="30dp"/>
+            android:textSize="15dp"/>
 
     </LinearLayout>
 </ScrollView>
