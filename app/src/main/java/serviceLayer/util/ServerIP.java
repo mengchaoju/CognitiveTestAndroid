@@ -5,7 +5,7 @@ package serviceLayer.util;
  */
 public class ServerIP {
 
-    private static final String HOST = "10.0.2.2:5000";
+    private static final String HOST = "192.168.0.105:5000";
     public static final String LOGINURL="http://"+HOST+"/stafflogin";
     public static final String SIGNUPURL="http://"+HOST+"/registerstaff";
     public static final String QUERYPARTICIPANTALL="http://"+HOST+"/queryParticipantAll";
