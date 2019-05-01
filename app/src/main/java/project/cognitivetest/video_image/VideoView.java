@@ -28,7 +28,7 @@ import serviceLayer.Settings;
 import serviceLayer.VideoService;
 import serviceLayer.util.ServerIP;
 
-public class VideoView extends AppCompatActivity implements View.OnClickListener {
+    public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
     private Button play, pause, image, finish, play2, image2, retry;
     private ImageView video;
@@ -57,7 +57,6 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_view);
-
         initView();
     }
 

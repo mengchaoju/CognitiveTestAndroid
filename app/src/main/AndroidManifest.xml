@@ -44,8 +44,7 @@
             android:theme="@android:style/Theme.NoTitleBar">
         </activity>
 
-        <activity android:name=".history.Activity_history"
-            android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".history.Activity_history">
         </activity>
 
         <activity android:name=".trials.IntroductionView"
