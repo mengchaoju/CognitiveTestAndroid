@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +31,7 @@ import serviceLayer.Settings;
 import serviceLayer.VideoService;
 import serviceLayer.util.ServerIP;
 
-    public class VideoView extends AppCompatActivity implements View.OnClickListener {
+public class VideoView extends AppCompatActivity implements View.OnClickListener {
 
     private Button play, pause, image, finish, play2, image2, retry;
     private ImageView video;
@@ -49,6 +52,9 @@ import serviceLayer.util.ServerIP;
     private int isResponse = 0;  // Indicating whether the server respond or not. 0 means no response yet
     private int isPause = 0;  //Indicate whether the video is paused
     private int trialCode = 0;  // 0 means copy trial, 1 means recall trial
+    private int flag = 0;  //Indicate whether the point is in a draw line or mark/correct line.
+        // 0 means draw, 1 means correct.
+    private PorterDuffXfermode porterDuffXfermode;
     private ArrayList<Long> timeLine, timeLine2;
     private int totalPoints, totalPoints2;
     private final String TAG = "VideoView";
@@ -171,6 +177,8 @@ import serviceLayer.util.ServerIP;
         copyBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
         // Create a pen instance
         paint = new Paint();
+        paint.setStrokeCap(Paint.Cap.ROUND);  //Set the cap to round
+        paint.setXfermode(null);
         // Create a sketchpad instance
         paint.setStrokeWidth(settings.getStrokeWidth());
         canvas = new Canvas(copyBitmap);
@@ -203,6 +211,8 @@ import serviceLayer.util.ServerIP;
         copyBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), bitmap.getConfig());
         // Create a pen instance
         paint = new Paint();
+        paint.setStrokeCap(Paint.Cap.ROUND);  //Set the cap to round
+        paint.setXfermode(null);
         // Create a sketchpad instance
         paint.setStrokeWidth(settings.getStrokeWidth());
         canvas = new Canvas(copyBitmap);
@@ -248,9 +258,22 @@ import serviceLayer.util.ServerIP;
      * Both playing video and show image call this function.
      */
     private void playVideo() {
+
         if (trialCode == 0) {
+            flag = videoService.getFlag();
+            if (flag == 0) {
+                paint.setXfermode(null);
+                paint.setStrokeWidth(settings.getStrokeWidth());
+                paint.setColor(Color.BLACK);
+            } else {
+                porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
+                paint.setXfermode(porterDuffXfermode);
+                paint.setStrokeWidth(settings.getMarkPenWidth());
+                paint.setColor(Color.YELLOW);
+            }
             if (videoService.getSeq()!=seq) {
                 seq = videoService.getSeq();
+
                 startX =videoService.getNextX();
                 startY = videoService.getNextY();
                 canvas.drawPoint(startX, startY, paint);
@@ -267,6 +290,17 @@ import serviceLayer.util.ServerIP;
             }
         } else {
 //            Log.d(TAG, "recall trial!");
+            flag = videoService2.getFlag();
+            if (flag == 0) {
+                paint.setXfermode(null);
+                paint.setStrokeWidth(settings.getStrokeWidth());
+                paint.setColor(Color.BLACK);
+            } else {
+                porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
+                paint.setXfermode(porterDuffXfermode);
+                paint.setStrokeWidth(settings.getMarkPenWidth());
+                paint.setColor(Color.YELLOW);
+            }
             if (videoService2.getSeq()!=seq) {
                 seq = videoService2.getSeq();
                 startX =videoService2.getNextX();
