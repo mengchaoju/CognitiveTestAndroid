@@ -121,6 +121,7 @@ public class LoginActivity extends Activity implements OnClickListener{
             @Override
             public void onResponse(Call call, Response response) throws IOException
             {
+                if (response.isSuccessful()){
                 final String res = response.body().string();
                 runOnUiThread(new Runnable()
                 {
@@ -152,8 +153,14 @@ public class LoginActivity extends Activity implements OnClickListener{
                     }
                 });
             }
-        });
-    }
+            else {
+//                    if callback failure for call to url
+                    Toast.makeText(LoginActivity.this,"Please try again",Toast.LENGTH_SHORT);
+                }
+        }}
+        );
+
+        }
 
     /**
      * When successfully log in, go to the home page.

@@ -18,23 +18,44 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
         <activity android:name=".HomeActivity"></activity>
-        <activity android:name=".login.LoginActivity">
+        <activity android:name=".login.LoginActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".video_image.VideoView"></activity>
+
+        <activity android:name=".video_image.VideoView"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
         <activity
             android:name=".login.RegisterActivity"
-            android:exported="false"></activity>
-        <activity android:name=".newTest.Activity_PtReg"></activity>
-        <activity android:name=".history.Activity_history"></activity>
-        <activity android:name=".trials.IntroductionView"></activity>
-        <activity android:name=".trials.SecondTrialView" />
-        <activity android:name=".trials.ContinuePage" />
-        <activity android:name=".trials.FirstTrialView" />
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity android:name=".newTest.Activity_PtReg"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity android:name=".history.Activity_history"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity android:name=".trials.IntroductionView"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity android:name=".trials.SecondTrialView"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".trials.ContinuePage"
+            android:theme="@android:style/Theme.NoTitleBar"/>
+        <activity android:name=".trials.FirstTrialView"
+            android:theme="@android:style/Theme.NoTitleBar"/>
     </application>
 
 </manifest>

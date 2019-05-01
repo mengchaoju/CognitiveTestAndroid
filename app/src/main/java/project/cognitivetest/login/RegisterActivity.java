@@ -56,6 +56,9 @@ public class RegisterActivity extends Activity {
     @BindView(R.id.input_DateofBirth)
     EditText inputDoB;
 
+    private ProgressDialog progressDialog;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +87,11 @@ public class RegisterActivity extends Activity {
                                          }
                                      }
         );
+
+        final ProgressDialog progressDialog1 = new ProgressDialog(RegisterActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+
+        this.progressDialog = progressDialog1;
     }
 
     private void initDatePicker(){
@@ -129,8 +137,6 @@ public class RegisterActivity extends Activity {
 
         btnSignup.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this,
-                R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
@@ -189,6 +195,7 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void run()
                     {
+                        progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this,"Server does not work.",Toast.LENGTH_SHORT).show();
 //                       showWarnSweetDialog("server wrong");
                     }
@@ -208,9 +215,11 @@ public class RegisterActivity extends Activity {
                         {
                             Toast.makeText(RegisterActivity.this,"The username has been registered.",Toast.LENGTH_SHORT).show();
 //                            showWarnSweetDialog("The username has been registered.");
+                            progressDialog.dismiss();
                         }
                         else
                         {
+                            progressDialog.dismiss();
                             finish();
 //                            sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
 //                            SharedPreferences.Editor editor = sharedPreferences.edit();

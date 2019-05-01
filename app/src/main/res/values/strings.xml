@@ -20,14 +20,14 @@
 
     </string>
     <string name="hint_login_btn">LOGIN</string>
-    <string name="hint_login_reg">Register</string>
+    <string name="hint_login_reg">Register as a clinician</string>
     <string name="hint_login_remPWD">  Remember Password</string>
     <string name="todo">TODO</string>
     <string name="hint_login_switchon">Don\'t save password</string>
     <string name="hint_login_swithcoff">Save password</string>
     <string name="hint_login_loading">Logging in</string>
-    <string name="hint_login_pwdEditField">Password</string>
-    <string name="hint_login_usernameEditField">Username</string>
+    <string name="hint_login_pwdEditField"> Password</string>
+    <string name="hint_login_usernameEditField"> Username</string>
 
     <string name="continue_text">Now please hand the tablet to the clinician.</string>
     <string name="introduction_text">This is an introduction.</string>

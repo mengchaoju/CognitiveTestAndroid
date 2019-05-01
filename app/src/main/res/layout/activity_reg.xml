@@ -9,9 +9,19 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="100dp"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp">
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:text="Register"
+            android:textSize="25dp"
+            android:textStyle="bold|italic"
+            android:typeface="sans" />
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
@@ -24,78 +34,78 @@
                 android:layout_height="wrap_content"
                 android:inputType="textCapWords"
                 android:hint="Username"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Firstname Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/input_firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:hint="Firstname"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Lastname Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/input_FamilyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:hint="Familyname"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Date of Birth Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:inputType="none">
             <EditText android:id="@+id/input_DateofBirth"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:hint="Date of Birth"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Confirm Password Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp">
             <EditText android:id="@+id/input_conPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Confirm Password"
-                android:textSize="40dp"/>
+                android:textSize="20dp"/>
         </android.support.design.widget.TextInputLayout>
 
         <!-- Signup Button -->
@@ -103,19 +113,20 @@
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="80dp"
-            android:layout_marginBottom="80dp"
-            android:padding="30dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            android:padding="10dp"
             android:text="Create Account"
-            android:textSize="30dp"/>
+            android:textSize="15dp"/>
 
         <TextView android:id="@+id/link_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="50dp"
             android:text="Already a member? Login"
             android:gravity="center"
-            android:textSize="30dip"/>
+            android:textSize="15dp"/>
 
     </LinearLayout>
 </ScrollView>
