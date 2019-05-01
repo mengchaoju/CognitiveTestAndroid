@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -86,6 +87,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         play2.setEnabled(false);
         image.setEnabled(false);
         image2.setEnabled(false);
+
         infoText.setText(R.string.video_info_getData);
         play.setOnClickListener(this);
         play2.setOnClickListener(this);
@@ -96,19 +98,11 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         retry.setOnClickListener(this);
 
         Intent intent = getIntent();
-        try {
-            participantID = intent.getStringExtra("participantID");
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-        }
-
-        new FetchData().execute("");
-
         Bundle bundle = intent.getBundleExtra("data");
         this.participantID = bundle.getString("participantID");
 
-        Log.d(TAG,"get participantID"+participantID);
-
+        Log.d(TAG,"get participantID:"+participantID);
+        new FetchData().execute("");
 
     }
 
@@ -165,7 +159,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             case(R.id.retry_button):
                 // TODO: Not functional yet.
                 Log.d(TAG, "Click on retry button");
-                new FetchData().execute("");
+                initView();
                 break;
         }
     }
@@ -220,7 +214,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
         Log.d(TAG, "ImageView initialised!");
         finish.setVisibility(View.VISIBLE);
         if (trialCode == 0) {  // For copy trial
-            Log.d(TAG, "copy trial!");
+//            Log.d(TAG, "copy trial!");
             for (int i=0;i<totalPoints;i++) {
                 playVideo();
             }
@@ -254,6 +248,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
 
     /**
      * This function deals with drawing all the pixels on the screen.
+     * Both playing video and show image call this function.
      */
     private void playVideo() {
         if (trialCode == 0) {
@@ -274,7 +269,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                 videoService.increaseSeq();
             }
         } else {
-            Log.d(TAG, "recall trial!");
+//            Log.d(TAG, "recall trial!");
             if (videoService2.getSeq()!=seq) {
                 seq = videoService2.getSeq();
                 startX =videoService2.getNextX();
@@ -298,14 +293,22 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     /**
      * Request pixel data from server using okHttp POST() function
      */
-    private void getDataFromServer() {
+    private void getDataFromServer1() {
         String url = serverIP.TRIALSDATAURL;
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .build();
         FormBody.Builder formBuilder = new FormBody.Builder();
         Log.d(TAG, "participantID:"+participantID);
         formBuilder.add("username", participantID);
-        Request request1 = new Request.Builder().url(url).post(formBuilder.build()).build();
-        Call call = client.newCall(request1);
+        final Request request = new Request.Builder()
+                .url(url).post(formBuilder.build())
+                .header("Connection", "close")
+//                .header("Vary", "Accept-Encoding")
+//                .header("Transfer-Encoding", "chunked")
+                .build();
+        Call call = client.newCall(request);
         call.enqueue(new Callback()
         {
             @Override
@@ -326,6 +329,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             public void onResponse(Call call, Response response) throws IOException
             {
                 try {
+//                    Log.d(TAG, "res length:"+response.body().contentLength());
                     String resp = response.body().string();  //The response from server
                     // Containing pixel data of both trials, separated by |
                     Log.d(TAG, "Server response:"+resp);
@@ -353,6 +357,62 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
             }
         }
     }
+
+    private void getDataFromServer() {
+//        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .build();
+        Request request = new Request
+                .Builder()
+                .url(serverIP.TRIALSDATAURL+"?"+participantID)
+//                .header("Connection", "close")
+                .header("Vary", "Accept-Encoding")
+                .header("Transfer-Encoding", "chunked")
+                .build();
+        Response response = null;
+        try{
+            response = client.newCall(request).execute();
+            if (response.code() == 200) {
+                String resp = response.body().string();
+                Log.d(TAG, "receive from server:"+resp);
+                String[] dataSet = resp.split("&");
+                pixelData = dataSet[0];
+                Log.d(TAG, "copyPixels:"+pixelData);
+                pixelData2 = dataSet[1];
+                videoService = new VideoService(pixelData);
+                videoService2 = new VideoService(pixelData2);
+                totalPoints = videoService.getTotalPoints();
+                totalPoints2 = videoService2.getTotalPoints();
+                timeLine = videoService.getTimeline();
+                timeLine2 = videoService2.getTimeline();
+                isResponse = 1;
+            } else {
+                runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        Toast.makeText(VideoView.this,"Server failure.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (response != null) {
+                response.body().close();
+            }
+        }
+        while(true) {
+            if (isResponse == 1) {
+                retry.setVisibility(View.INVISIBLE);
+                break;
+            }
+        }
+    }
+
 
     /**
      * Do in background, dealing with getting data from server
@@ -394,19 +454,19 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
     private class VideoTimeLineHandler extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
             if (trialCode == 0) {
                 // Copy trial
+                Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints));
                 int i =0;  //The counter
                 while (true) {
                     if (i == totalPoints) {
                         break;
                     } else if (isPause!=1) {
                         try {
-                            Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
+//                            Log.d(TAG, "Will sleep:"+timeLine.get(i).toString()+" milliseconds");
                             Thread.sleep(timeLine.get(i));
                             playVideo();
-                            Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
+//                            Log.d(TAG, "Draw:"+Integer.toString(i+1)+"point");
                             i++;
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -416,6 +476,7 @@ public class VideoView extends AppCompatActivity implements View.OnClickListener
                 }  //When finish playing, show finish button on the screen.
             } else {
                 // Recall trial
+                Log.d(TAG, "Total points to draw:"+Integer.toString(totalPoints2));
                 int i =0;  //The counter
                 while (true) {
                     if (i == totalPoints2) {

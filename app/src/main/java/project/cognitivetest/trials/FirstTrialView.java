@@ -100,7 +100,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
                             timer.setTime(2);
                             finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
                         }
-                        Log.d(TAG, "drawing!");
+//                        Log.d(TAG, "drawing!");
                         startX = event.getX();
                         startY = event.getY();
                         changeColor(v);
@@ -124,6 +124,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
 //                                Float.toString(startY)+")"+"seq: "+seq);
                         colourFlag += 1;
                         colourFlag2 += 1;
+//                        Log.d(TAG, "line number:"+seq);
                         break;
                     //when the figure leave the screen
                     case MotionEvent.ACTION_UP:

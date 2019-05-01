@@ -101,7 +101,7 @@ public class SecondTrialView extends AppCompatActivity implements View.OnClickLi
                             timer.setTime(2);
                             finishBtn.setVisibility(View.VISIBLE);  //Enable the finish button
                         }
-                        Log.d(TAG, "drawing!");
+//                        Log.d(TAG, "drawing!");
                         startX = event.getX();
                         startY = event.getY();
                         changeColor(v);
