@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cv_test"
@@ -10,80 +10,65 @@
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
     android:visibility="visible"
-    android:orientation="horizontal">
-
-    <!--android:foreground="@drawable/cardview_item"-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:accessibilityTraversalAfter="@+id/pt_id_text"
-        android:accessibilityTraversalBefore="@+id/pt_id_text"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:background="@drawable/frame_history_result">
+    android:orientation="horizontal"
+    android:background="@drawable/frame_history_result"
+    >
 
         <TextView
             android:id="@+id/pt_id_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="15dp"
             android:elevation="4dp"
             android:text="Participant ID"
             android:textColor="#000000"
-            android:textSize="10dp"
-            android:visibility="visible" />
+            android:textSize="25dp"
+            android:singleLine="true"
+            android:visibility="visible"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/pt_name_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1.5"
             android:layout_toRightOf="@+id/pt_id_text"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="10dp"
             android:text="Name"
             android:textColor="#000000"
-            android:textSize="10dp"
-            android:visibility="visible" />
+            android:textSize="25dp"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/pt_gender_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_toRightOf="@+id/pt_name_text"
-            android:layout_marginLeft="30dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
             android:text="Gender"
             android:textColor="#000000"
-            android:textSize="10dp"
-            android:visibility="visible" />
+            android:textSize="25dp"
+            android:visibility="visible"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/pt_dateofbirth_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/pt_gender_text"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
             android:text="Date of Birth"
             android:textColor="#000000"
-            android:textSize="10dp"
+            android:textSize="25dp"
             android:visibility="visible"
             android:singleLine="true"
-            tools:text="DoB" />
-    </RelativeLayout>
+            tools:text="DoB"
+            android:layout_gravity="center"
+            android:gravity="center"/>
 
 
-</RelativeLayout>
+</LinearLayout>
