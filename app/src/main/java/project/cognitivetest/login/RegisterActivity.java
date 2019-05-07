@@ -187,7 +187,9 @@ public class RegisterActivity extends Activity {
         String encryLN = null;
         String encryDoB = null;
 
-//        encryption
+        /**
+         * Encryption process
+         */
         try {
             encryUserName = AESCrypt.encrypt(ServerIP.secret,userName);
             encryPwd = AESCrypt.encrypt(ServerIP.secret,passWord);

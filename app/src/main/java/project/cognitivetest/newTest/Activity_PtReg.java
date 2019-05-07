@@ -289,6 +289,9 @@ public class Activity_PtReg extends Activity {
         return valid;
     }
 
+    /**
+     * Start testing
+     */
     private void gotoTrials() {
         Log.d(TAG, "Navigate to trials, with participantID:"+participantID);
         Intent intent = new Intent(Activity_PtReg.this, IntroductionView.class);

@@ -18,12 +18,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scottyab.aescrypt.AESCrypt;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -242,11 +245,11 @@ public class Activity_history extends AppCompatActivity {
                                 JSONArray jsonArray = new JSONArray(res);
                                 for (int i =0; i<jsonArray.length();i++){
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    String participantID = jsonObject.getString("participantid");
-                                    String firstName = jsonObject.getString("firstname");
-                                    String familyName = jsonObject.getString("familyname");
-                                    String gender = jsonObject.getString("gender");
-                                    String dateOfBirth = jsonObject.getString("dateofbirth");
+                                    String participantID = AESCrypt.decrypt(ServerIP.secret,jsonObject.getString("participantid"));
+                                    String firstName = AESCrypt.decrypt(ServerIP.secret,jsonObject.getString("firstname"));
+                                    String familyName = AESCrypt.decrypt(ServerIP.secret,jsonObject.getString("familyname"));
+                                    String gender = AESCrypt.decrypt(ServerIP.secret,jsonObject.getString("gender"));
+                                    String dateOfBirth = AESCrypt.decrypt(ServerIP.secret,jsonObject.getString("dateofbirth"));
 
                                     Participant participant = new Participant(participantID,firstName
                                     ,familyName,gender,dateOfBirth);
@@ -254,6 +257,8 @@ public class Activity_history extends AppCompatActivity {
                                     mResults.add(participant);
                                 }
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (GeneralSecurityException e) {
                                 e.printStackTrace();
                             }
                             initAdapter();
