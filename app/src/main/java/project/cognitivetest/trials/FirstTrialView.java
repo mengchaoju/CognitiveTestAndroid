@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
@@ -34,7 +35,8 @@ import serviceLayer.util.ServerIP;
 public class FirstTrialView extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView sketchpad;
-    private Button startBtn, finishBtn, correctBtn;
+    private Button startBtn, finishBtn;
+    private Switch correctSwt;
     private Bitmap copyBitmap;
     private Paint paint;
     private Canvas canvas;
@@ -151,7 +153,7 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
             case R.id.finish:
                 finishDraw();
                 break;
-            case R.id.correct:
+            case R.id.switch1:
                 correct();
                 break;
             default:
@@ -191,7 +193,6 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         if (ifMark == 0) {
             Log.d(TAG, "start correcting!");
             this.ifMark = 1;
-            correctBtn.setText("draw");
             porterDuffXfermode = new PorterDuffXfermode(PorterDuff.Mode.MULTIPLY);
             paint.setXfermode(porterDuffXfermode);
             paint.setStrokeWidth(settings.getMarkPenWidth());
@@ -199,7 +200,6 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         } else {
             Log.d(TAG, "finish correcting!");
             this.ifMark = 0;
-            correctBtn.setText("correct");
             paint.setXfermode(null);
             paint.setStrokeWidth(settings.getStrokeWidth());
             if (enableColour == 1) {
@@ -238,12 +238,12 @@ public class FirstTrialView extends AppCompatActivity implements View.OnClickLis
         sketchpad = (ImageView) findViewById(R.id.sketchpad);
         startBtn = (Button) findViewById(R.id.start);
         finishBtn = (Button) findViewById(R.id.finish);
-        correctBtn = (Button) findViewById(R.id.correct);
+        correctSwt = (Switch) findViewById(R.id.switch1);
 
         //Set the button listener
         startBtn.setOnClickListener(this);
         finishBtn.setOnClickListener(this);
-        correctBtn.setOnClickListener(this);
+        correctSwt.setOnClickListener(this);
 
         Log.d(TAG, "Activity view initialized.");
         //Receive participant ID from last activity.
