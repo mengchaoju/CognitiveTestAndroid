@@ -17,7 +17,8 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:layout_marginStart="10dp"
-            android:text="Start" />
+            android:text="Start"
+            android:background="@drawable/login_btn" />
 
         <Button
             android:id="@+id/finish_2"
@@ -25,14 +26,28 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:text="Finish"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:background="@color/primary" />
 
-        <Button
-            android:id="@+id/correct_2"
+        <Switch
+            android:id="@+id/switch2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="54dp"
+            android:splitTrack="false"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:text="Draw" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="18sp"
             android:text="Correct" />
 
     </FrameLayout>

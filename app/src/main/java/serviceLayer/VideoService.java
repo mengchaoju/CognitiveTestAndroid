@@ -51,32 +51,34 @@ public class VideoService {
         Timestamp thisTimeStamp;
         int len = strList.length;
         Log.d(TAG, "Total points cached:"+Integer.toString(len));
-        for (int i = 0; i < len; i++) {
-            String[] strList2 = strList[i].split(",");
-            for (int j = 0; j < 5; j++) {
-                switch (j) {
-                    case (0):
-                        Xcoordinate.add(Float.parseFloat(strList2[j]));
-                        break;
-                    case (1):
-                        Ycoordinate.add(Float.parseFloat(strList2[j]));
-                        break;
-                    case (2):
-                        if (i!=0) {
-                            thisTimeStamp = Timestamp.valueOf(strList2[j]);
-                            timeDiff = thisTimeStamp.getTime() - lastTimeStamp.getTime();
-                            lastTimeStamp = thisTimeStamp;
-                        } else {
-                            lastTimeStamp = Timestamp.valueOf(strList2[j]);
-                        }
-                        timeline.add(timeDiff);
-                        break;
-                    case (3):
-                        seqList.add(Integer.parseInt(strList2[j]));
-                        break;
-                    case (4):
-                        flags.add(Integer.parseInt(strList2[j]));
-                        break;
+        if (len!=1) {
+            for (int i = 0; i < len; i++) {
+                String[] strList2 = strList[i].split(",");
+                for (int j = 0; j < 5; j++) {
+                    switch (j) {
+                        case (0):
+                            Xcoordinate.add(Float.parseFloat(strList2[j]));
+                            break;
+                        case (1):
+                            Ycoordinate.add(Float.parseFloat(strList2[j]));
+                            break;
+                        case (2):
+                            if (i!=0) {
+                                thisTimeStamp = Timestamp.valueOf(strList2[j]);
+                                timeDiff = thisTimeStamp.getTime() - lastTimeStamp.getTime();
+                                lastTimeStamp = thisTimeStamp;
+                            } else {
+                                lastTimeStamp = Timestamp.valueOf(strList2[j]);
+                            }
+                            timeline.add(timeDiff);
+                            break;
+                        case (3):
+                            seqList.add(Integer.parseInt(strList2[j]));
+                            break;
+                        case (4):
+                            flags.add(Integer.parseInt(strList2[j]));
+                            break;
+                    }
                 }
             }
         }
