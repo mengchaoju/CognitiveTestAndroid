@@ -29,7 +29,7 @@ import okhttp3.Response;
 import project.cognitivetest.R;
 import serviceLayer.Settings;
 import serviceLayer.VideoService;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 public class VideoView extends AppCompatActivity implements View.OnClickListener {
 

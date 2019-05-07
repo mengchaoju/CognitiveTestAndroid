@@ -35,7 +35,7 @@ import okhttp3.Response;
 import project.cognitivetest.R;
 import project.cognitivetest.adapter.HistoryAdaptor;
 import project.cognitivetest.modules.Participant;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/15

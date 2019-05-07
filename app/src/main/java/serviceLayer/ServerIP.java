@@ -1,4 +1,4 @@
-package serviceLayer.util;
+package serviceLayer;
 
 /**
  * Created by 50650 on 2019/4/5
@@ -18,5 +18,6 @@ public class ServerIP {
     public static final String QUERYPARTICIPANTFAMILY="http://"+HOST+"/queryParticipantFamilyName";
     public static final String QUERYPARTICIPANTGENDER="http://"+HOST+"/queryParticipantGender";
     public static final String QUERYPARTICIPANTDOB="http://"+HOST+"/queryParticipantDateOfBirth";
+    public static final String secret = "password";
 
 }

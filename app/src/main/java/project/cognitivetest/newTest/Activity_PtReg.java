@@ -15,7 +15,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.scottyab.aescrypt.AESCrypt;
+
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -28,7 +31,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.R;
 import project.cognitivetest.trials.IntroductionView;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/16
@@ -168,11 +171,28 @@ public class Activity_PtReg extends Activity {
     {
         OkHttpClient client1 = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("participantid", participantsID);
-        formBuilder.add("firstname",firstName);
-        formBuilder.add("familyname",familyName);
-        formBuilder.add("gender", gender);
-        formBuilder.add("dateofbirth",dateOfBirth);
+
+        String enPID=null;
+        String enFN=null;
+        String enFamily=null;
+        String enGender=null;
+        String enDoB=null;
+
+        try {
+            enPID = AESCrypt.encrypt(staffID, participantsID);
+            enFN = AESCrypt.encrypt(staffID,firstName);
+            enFamily =AESCrypt.encrypt(staffID,familyName);
+            enGender = AESCrypt.encrypt(staffID,gender);
+            enDoB=AESCrypt.encrypt(staffID,dateOfBirth);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+
+        formBuilder.add("participantid", enPID);
+        formBuilder.add("firstname",enFN);
+        formBuilder.add("familyname",enFamily);
+        formBuilder.add("gender", enGender);
+        formBuilder.add("dateofbirth",enDoB);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call1 = client1.newCall(request);
         call1.enqueue(new Callback()

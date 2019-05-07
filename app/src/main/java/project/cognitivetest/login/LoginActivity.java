@@ -17,7 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scottyab.aescrypt.AESCrypt;
+
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -27,7 +30,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.HomeActivity;
 import project.cognitivetest.R;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 public class LoginActivity extends Activity implements OnClickListener{
 
@@ -93,74 +96,70 @@ public class LoginActivity extends Activity implements OnClickListener{
      * @param userName Username
      * @param passWord Password
      */
-    private void getCheckFromServer(String url,final String userName,String passWord)
-    {
+    private void getCheckFromServer(String url,final String userName,String passWord) {
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("username", userName);
-        formBuilder.add("password", passWord);
+        String encryUserName = null;
+        String encryPwd = null;
+        try {
+            encryUserName = AESCrypt.encrypt(userName, userName);
+            encryPwd = AESCrypt.encrypt(userName, passWord);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+        formBuilder.add("username", encryUserName);
+        formBuilder.add("password", encryPwd);
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request);
-        call.enqueue(new Callback()
-        {
-            @Override
-            public void onFailure(Call call, IOException e)
-            {
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        Toast.makeText(LoginActivity.this,"Server failure.",Toast.LENGTH_SHORT).show();
-//                        showWarnSweetDialog("Server does not work now.");
-                    }
-                });
+        call.enqueue(new Callback() {
+                         @Override
+                         public void onFailure(Call call, IOException e) {
+                             runOnUiThread(new Runnable() {
+                                 @Override
+                                 public void run() {
+                                     Toast.makeText(LoginActivity.this, "Server failure.", Toast.LENGTH_SHORT).show();
+                                     //                        showWarnSweetDialog("Server does not work now.");
+                                 }
+                             });
 
-            }
+                         }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException
-            {
-                if (response.isSuccessful()){
-                final String res = response.body().string();
-                runOnUiThread(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        if (res.equals("not find username"))
-                        {
-                            Toast.makeText(LoginActivity.this,"The username is not registered.",Toast.LENGTH_SHORT).show();
-//                            showWarnSweetDialog("The username is not registered");
-                        }
-                        else if(res.equals("password is not right"))
-                        {
-                            Toast.makeText(LoginActivity.this,"Incorrect username or password.",Toast.LENGTH_SHORT).show();
-//                            showWarnSweetDialog("password is not right");
-                        }
-                        else  //success
-                        {
-                            Toast.makeText(LoginActivity.this,res,Toast.LENGTH_SHORT).show();
-                            setLoggingStatus(LoginActivity.this,true);
-//                            showSuccessSweetDialog(res);
-                            sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("username", userName);
-                            editor.apply();
-                            goToHomePage();
-                        }
+                         @Override
+                         public void onResponse(Call call, Response response) throws IOException {
+                             if (response.isSuccessful()) {
+                                 final String res = response.body().string();
+                                 runOnUiThread(new Runnable() {
+                                     @Override
+                                     public void run() {
+                                         if (res.equals("not find username")) {
+                                             Toast.makeText(LoginActivity.this, "The username is not registered.", Toast.LENGTH_SHORT).show();
+                                             //                            showWarnSweetDialog("The username is not registered");
+                                         } else if (res.equals("password is not right")) {
+                                             Toast.makeText(LoginActivity.this, "Incorrect username or password.", Toast.LENGTH_SHORT).show();
+                                             //                            showWarnSweetDialog("password is not right");
+                                         } else  //success
+                                         {
+                                             Toast.makeText(LoginActivity.this, res, Toast.LENGTH_SHORT).show();
+                                             setLoggingStatus(LoginActivity.this, true);
+                                             //                            showSuccessSweetDialog(res);
+                                             sharedPreferences = getSharedPreferences("UserIDAndPassword", MODE_PRIVATE);
+                                             SharedPreferences.Editor editor = sharedPreferences.edit();
+                                             editor.putString("username", userName);
+                                             editor.apply();
+                                             goToHomePage();
+                                         }
 
-                    }
-                });
-            }
-            else {
-//                    if callback failure for call to url
-                    Toast.makeText(LoginActivity.this,"Please try again",Toast.LENGTH_SHORT);
-                }
-        }}
+                                     }
+                                 });
+                             } else {
+                                 //                    if callback failure for call to url
+                                 Toast.makeText(LoginActivity.this, "Please try again", Toast.LENGTH_SHORT);
+                             }
+                         }
+                     }
         );
 
-        }
+    }
 
     /**
      * When successfully log in, go to the home page.
@@ -171,32 +170,6 @@ public class LoginActivity extends Activity implements OnClickListener{
         intent.putExtra("staffID", username);  // This is the username of staff
         startActivity(intent);
     }
-
-//    private void showWarnSweetDialog(String info)
-//    {
-//        SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.WARNING_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText(info);
-//        pDialog.setCancelable(true);
-//        pDialog.show();
-//    }
-
-//    private void showSuccessSweetDialog(String info)
-//    {
-//        final SweetAlertDialog pDialog = new SweetAlertDialog(LoginActivity.this, SweetAlertDialog.SUCCESS_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setTitleText(info);
-//        pDialog.setCancelable(true);
-//        pDialog.show();
-//        pDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener()
-//        {
-//            @Override
-//            public void onClick(SweetAlertDialog sweetAlertDialog)
-//            {
-//                pDialog.dismiss();
-//            }
-//        });
-//    }
 
     public static void  setLoggingStatus(Context context, boolean status)
     {

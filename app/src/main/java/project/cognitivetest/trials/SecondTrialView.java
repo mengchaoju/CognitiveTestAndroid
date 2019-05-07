@@ -30,7 +30,7 @@ import serviceLayer.DataCache;
 import serviceLayer.Settings;
 import serviceLayer.Timer;
 import serviceLayer.UploadDataService;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 public class SecondTrialView extends AppCompatActivity implements View.OnClickListener {
 
