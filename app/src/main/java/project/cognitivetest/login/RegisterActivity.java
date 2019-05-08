@@ -16,7 +16,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scottyab.aescrypt.AESCrypt;
+
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Calendar;
 
 import butterknife.BindView;
@@ -28,7 +31,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import project.cognitivetest.R;
-import serviceLayer.util.ServerIP;
+import serviceLayer.ServerIP;
 
 /**
  * Created by 50650 on 2019/4/2
@@ -132,7 +135,7 @@ public class RegisterActivity extends Activity {
 
         if (!validate()) {
             onSignUpFailed();
-            return;
+            return  ;
         }
 
         btnSignup.setEnabled(false);
@@ -178,11 +181,32 @@ public class RegisterActivity extends Activity {
     {
         OkHttpClient client = new OkHttpClient();
         FormBody.Builder formBuilder = new FormBody.Builder();
-        formBuilder.add("username", userName);
-        formBuilder.add("password", passWord);
-        formBuilder.add("firstname",firstName);
-        formBuilder.add("familyname",familyName);
-        formBuilder.add("dateofbirth",dateOfBirth);
+        String encryUserName = null;
+        String encryPwd = null;
+        String encryFN = null;
+        String encryLN = null;
+        String encryDoB = null;
+
+        /**
+         * Encryption process
+         */
+        try {
+            encryUserName = AESCrypt.encrypt(ServerIP.secret,userName);
+            encryPwd = AESCrypt.encrypt(ServerIP.secret,passWord);
+            encryDoB = AESCrypt.encrypt(ServerIP.secret,dateOfBirth);
+            encryFN = AESCrypt.encrypt(ServerIP.secret,firstName);
+            encryLN= AESCrypt.encrypt(ServerIP.secret,familyName);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        }
+
+        formBuilder.add("username", encryUserName);
+        formBuilder.add("password", encryPwd);
+        formBuilder.add("firstname",encryFN);
+        formBuilder.add("familyname",encryLN);
+        formBuilder.add("dateofbirth",encryDoB);
+
+
         Request request = new Request.Builder().url(url).post(formBuilder.build()).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback()
