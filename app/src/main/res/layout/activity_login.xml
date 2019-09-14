@@ -1,0 +1,120 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    style="@style/layout_full"
+    android:background="#e7e7e7"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+
+    >
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/brain" />
+
+
+    <LinearLayout
+        android:id="@+id/login_linearLayout"
+        style="@style/layout_full"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginRight="150dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_input"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/userId_LinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:orientation="horizontal">
+
+                <!-- android:ems="10" means EditText only can show 10 chars，the else not shown -->
+                <!-- android:singleLine="true" means when it cannot show whole string, use "..." to show the rest -->
+                <EditText
+                    android:id="@+id/login_edtId"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:ems="20"
+                    android:hint="@string/hint_login_usernameEditField"
+                    android:inputType=""
+                    android:paddingLeft="20dp"
+                    android:paddingTop="35dp"
+                    android:paddingRight="30dp"
+                    android:paddingBottom="0dp"
+                    android:singleLine="true"
+                    android:textColorHint="#999999"
+                    android:textSize="30dp">
+
+                    <requestFocus />
+                </EditText>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CACDD1" />
+
+            <EditText
+                android:id="@+id/login_edtPwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/hint_login_pwdEditField"
+                android:inputType="textPassword"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="10dp"
+                android:singleLine="true"
+                android:textColorHint="#999999"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login_btnLogin"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/login_btn"
+            android:text="@string/hint_login_btn"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/layout_full"
+        android:layout_weight="1"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/login_txtReg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="80dp"
+            android:text="@string/hint_login_reg"
+            android:textAllCaps="true"
+            android:textColor="#0079FF"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            android:singleLine="true"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

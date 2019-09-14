@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".history.Activity_history">
+
+    <TextView
+        android:id="@+id/heading_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:text="Search Participants"
+        android:typeface="monospace"
+
+        android:textColor="#555555"
+        android:textSize="40sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heading_label"
+        android:id="@+id/history_hearder"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:entries="@array/history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:layout_below="@id/history_hearder"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="2"
+            />
+
+        <EditText
+            android:id="@+id/search_field"
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/heading_label"
+            android:layout_alignStart="@+id/heading_label"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_toStartOf="@+id/search_btn"
+            android:ems="10"
+            android:hint="Search here"
+            android:inputType="textPersonName"
+            android:paddingBottom="10dp"
+            android:textSize="30sp"
+            android:typeface="serif" />
+
+        <!--         android:background="@drawable/search_layout" -->
+        <ImageButton
+            android:id="@+id/search_btn"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/search_field"
+            android:layout_alignBottom="@+id/search_field"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/ic_action_search" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:layout_below="@id/history_hearder"
+        android:id="@+id/history_title">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="30dp"
+            android:text="ID"
+            android:typeface="monospace"
+            android:textColor="#555555"
+            android:textSize="20dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:text="Name"
+            android:typeface="monospace"
+            android:textColor="#555555"
+            android:textSize="20dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="Gender"
+            android:typeface="monospace"
+            android:textColor="#555555"
+            android:textSize="20dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="DoB"
+            android:typeface="monospace"
+            android:textColor="#555555"
+            android:textSize="20dp"
+            />
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="20dp"-->
+            <!--android:text="Test Date"-->
+            <!--android:typeface="monospace"-->
+            <!--android:textColor="#555555"-->
+            <!--android:textSize="20dp"-->
+            <!--/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@id/history_title">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/result_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/history_hearder"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="vertical">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+</RelativeLayout>

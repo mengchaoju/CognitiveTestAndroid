@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Y-axis vertical panning animation -->
+    <translate
+        android:duration="500"
+        android:fromYDelta="500"
+        android:toYDelta="0" >
+    </translate>
+    <!--
+
+       Translate the animation effect
+        Integer value:
+        The fromXDelta property is the position on the X coordinate at the beginning of the animation
+        The toXDelta property is the position in the x-coordinate at the end of the animation
+        The fromYDelta property is the position on the Y coordinate at the beginning of the animation
+        The toYDelta attribute is the position on the Y coordinate at the end of the animation
+        Note:
+        When you do not specify fromXType toXType fromYType toYType, by default you are the relative reference
+        Long integer value:
+        The duration attribute is the duration of the animation
+        Description:
+        Time is measured in milliseconds
+
+    -->
+
+</set>
